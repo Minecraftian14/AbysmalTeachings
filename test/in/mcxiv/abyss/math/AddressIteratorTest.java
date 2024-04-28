@@ -1,5 +1,7 @@
 package in.mcxiv.abyss.math;
 
+import in.mcxiv.abyss.mathematics.AddressIterator;
+import in.mcxiv.abyss.mathematics.MoreMath;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,7 @@
 package in.mcxiv.abyss.util;
 
-import in.mcxiv.abyss.data.Array1DPolyData;
+import in.mcxiv.abyss.data.representation.Array1DPolyData;
+import in.mcxiv.abyss.utilities.Cache;
 import org.junit.jupiter.api.Test;
 
 import java.util.Objects;

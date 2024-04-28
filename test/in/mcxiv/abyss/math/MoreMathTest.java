@@ -1,8 +1,8 @@
 package in.mcxiv.abyss.math;
 
-import in.mcxiv.abyss.data.Array1DPolyData;
-import in.mcxiv.abyss.data.PolyData;
-import org.junit.jupiter.api.Assertions;
+import in.mcxiv.abyss.data.representation.Array1DPolyData;
+import in.mcxiv.abyss.data.representation.PolyData;
+import in.mcxiv.abyss.mathematics.MoreMath;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,7 +22,7 @@ class MoreMathTest {
         var ai = new AtomicInteger();
         data.fill(ai::incrementAndGet);
         System.out.println(data);
-        var sum = PolyData.sumAll(data, 0, new Array1DPolyData(1));
+        var sum = PolyData.reduceSum(data, 0, new Array1DPolyData(1));
         System.out.println(sum);
         assertArrayEquals(new float[]{45.0f, 126.0f, 207.0f}, sum.export());
     }
