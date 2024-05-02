@@ -11,7 +11,7 @@ import in.mcxiv.abyss.utilities.Cache;
 import static in.mcxiv.abyss.data.representation.PolyData.*;
 import static in.mcxiv.abyss.utilities.Pools.ARRAY_POOL;
 
-public class FullyConnected extends MathematicalUnit {
+public class FullyConnectedUnit extends MathematicalUnit {
 
     public LatePolyData weights;
     LatePolyData bias;
@@ -19,7 +19,7 @@ public class FullyConnected extends MathematicalUnit {
 //    PolyData dweights = new Array1DPolyData(1);
 //    PolyData dbias = new Array1DPolyData(1);
 
-    public FullyConnected(int hiddenUnits) {
+    public FullyConnectedUnit(int hiddenUnits) {
         weights = new LatePolyData(new Multiplicative2DParameterInitializer(hiddenUnits));
         bias = new LatePolyData(new Additive2DParameterInitializer(hiddenUnits));
         addInitiazables(weights, bias);

@@ -31,7 +31,7 @@ public class PlotLossAfterTraining implements in.mcxiv.abyss.optimisers.Optimise
 
     @Override
     public void trainingStopped() {
-        PyPlot.plotBar(list, true);
+        PyPlot.plotBar("Loss Plot", list, true);
     }
 
 }

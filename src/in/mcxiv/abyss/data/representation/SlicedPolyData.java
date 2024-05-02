@@ -1,6 +1,7 @@
 package in.mcxiv.abyss.data.representation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class SlicedPolyData extends PolyDataPolyData {
@@ -89,6 +90,9 @@ public class SlicedPolyData extends PolyDataPolyData {
 
     @Override
     public PolyData reshape(int[] shape) {
+
+        if (Arrays.equals(this.shape, shape))
+            return this;
         throw new UnsupportedOperationException();
     }
 

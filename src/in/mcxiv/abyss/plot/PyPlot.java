@@ -26,12 +26,7 @@ public class PyPlot {
         }
     }
 
-    public static void plotBar(List<Float> array, boolean truncate) {
-
-//        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-//        StackTraceElement element = stackTrace[2];
-//        System.out.println("> "+element.getClassName() + ":" + element.getMethodName());
-
+    public static void plotBar(String title, List<Float> array, boolean truncate) {
         try {
             int s = array.size(), k = s / TRUNCATION_THRESHOLD;
             truncate = truncate && s >= TRUNCATION_THRESHOLD;
@@ -49,9 +44,10 @@ public class PyPlot {
                     with open(r'%s') as f:
                         list = [float(x) for x in f.readlines()]
                     plt.plot(list)
+                    plt.title('%s')
                     plt.show()
                     print("Data length of plot: ", len(list))
-                    """.formatted(file.getAbsolutePath()), false);
+                    """.formatted(file.getAbsolutePath(), title), false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -41,4 +41,9 @@ public class PolyDataPolyData implements PolyData {
     public PolyData clone() {
         return PolyData.super.clone();
     }
+
+    @Override
+    public String toString() {
+        return "ref." + polyData.toString();
+    }
 }

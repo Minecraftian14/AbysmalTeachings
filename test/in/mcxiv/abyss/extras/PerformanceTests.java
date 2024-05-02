@@ -37,6 +37,6 @@ public class PerformanceTests {
             list.add((float) time);
         }
         float t = 3*(float) list.stream().mapToDouble(value -> value).average().getAsDouble();
-        PyPlot.plotBar(list.stream().filter(f -> f<t).toList(), false);
+        PyPlot.plotBar("Title", list.stream().filter(f -> f<t).toList(), false);
     }
 }

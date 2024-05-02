@@ -17,7 +17,7 @@ public class GradientDescentOptimiser extends Optimiser {
     ErrorFunction error = ErrorFunction.meanSquaredError;
     ErrorFunction dError = ErrorFunction.dMeanSquaredError;
     Updater updater = new SimpleAdditiveUpdater();
-    int epoch = 1000;
+    int epoch = 100;
 
     public GradientDescentOptimiser(MathematicalUnit model, Feeder trainFeeder, Feeder testFeeder) {
         this.model = model;

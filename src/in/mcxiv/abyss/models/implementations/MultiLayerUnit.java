@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MultiLayer extends MathematicalUnit {
+public class MultiLayerUnit extends MathematicalUnit {
 
     List<MathematicalUnit> layers = new ArrayList<>();
 
-    public MultiLayer(MathematicalUnit... layers) {
+    public MultiLayerUnit(MathematicalUnit... layers) {
         add(layers);
     }
 

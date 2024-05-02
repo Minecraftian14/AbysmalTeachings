@@ -6,9 +6,9 @@ import in.mcxiv.abyss.utilities.Cache;
 
 import static in.mcxiv.abyss.utilities.Pools.ARRAY_POOL;
 
-public class Activation extends CustomOperations {
+public class ActivationUnit extends CustomOperationUnit {
 
-    public Activation(ActivationFunction function) {
+    public ActivationUnit(ActivationFunction function) {
         super(function::activate, function::deactivate);
     }
 

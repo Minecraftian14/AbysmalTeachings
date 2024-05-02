@@ -16,7 +16,7 @@ import static in.mcxiv.abyss.core.ScoringFunction.fuzzy_accuracy;
 import static in.mcxiv.abyss.data.representation.Array1DPolyData.n;
 import static in.mcxiv.abyss.data.representation.PolyData.unaryOperation;
 
-class MultiLayerTest {
+class MultiLayerUnitTest {
     @Test
     void basicTest() {
 
@@ -26,17 +26,17 @@ class MultiLayerTest {
         System.out.println("x = " + x);
         System.out.println("y = " + y);
         var feeder = new SingletonFeeder(dataset);
-        var connections = new FullyConnected[]{
-                new FullyConnected(4),
-                new FullyConnected(y.shape(1))
+        var connections = new FullyConnectedUnit[]{
+                new FullyConnectedUnit(4),
+                new FullyConnectedUnit(y.shape(1))
         };
         connections[0].weights.addPreprocessor(data -> data.fill(0.1f * MoreMath.random()));
         connections[1].weights.addPreprocessor(data -> data.fill(0.1f));
-        var model = new MultiLayer(
+        var model = new MultiLayerUnit(
                 connections[0],
-                new Activation(ActivationFunction.SIGMOID),
+                new ActivationUnit(ActivationFunction.SIGMOID),
                 connections[1],
-                new Activation(ActivationFunction.SIGMOID)
+                new ActivationUnit(ActivationFunction.SIGMOID)
         );
 //        var model = connections[1];
         model.initialize(x);

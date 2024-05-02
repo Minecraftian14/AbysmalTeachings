@@ -2,8 +2,7 @@ package in.mcxiv.abyss.optimisers;
 
 import in.mcxiv.abyss.data.representation.Array1DPolyData;
 import in.mcxiv.abyss.feeders.SingletonFeeder;
-import in.mcxiv.abyss.models.implementations.FullyConnected;
-import in.mcxiv.abyss.models.implementations.FullyConnectedOld;
+import in.mcxiv.abyss.models.implementations.FullyConnectedUnit;
 import in.mcxiv.abyss.optimisers.events.PlotLossAfterTraining;
 import in.mcxiv.abyss.utilities.Cache;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,7 @@ class GradientDescentOptimiserTest {
         var feeder = new SingletonFeeder(x, y);
 
 //        var model = new FullyConnectedOld(y.shape(1));
-        var model = new FullyConnected(y.shape(1));
+        var model = new FullyConnectedUnit(y.shape(1));
         model.weights.addPreprocessor(data -> data.fill(0.01f));
 
         model.initialize(x);

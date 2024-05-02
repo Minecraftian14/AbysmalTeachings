@@ -12,23 +12,24 @@ public class Recorder {
 
     ArrayList<Float> list = new ArrayList<>();
     ScheduledExecutorService service;
+    String title;
 
-    public Recorder(Supplier<Float> record) {
+    public Recorder(Supplier<Float> record, String title) {
+        this.title = title;
         service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleWithFixedDelay(() -> list.add(record.get()), 100, 250, TimeUnit.MILLISECONDS);
+        service.scheduleWithFixedDelay(() -> list.add(record.get()), 0, 20, TimeUnit.MILLISECONDS);
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
     private void shutdown() {
+        System.out.println("qwertyuiop");
         if (service.isShutdown()) return;
         try {
             service.shutdown();
             service.awaitTermination(1, TimeUnit.MINUTES);
-            PyPlot.plotBar(list, false);
+            PyPlot.plotBar(title, list, false);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
-
-
 }

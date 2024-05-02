@@ -11,7 +11,7 @@ import static in.mcxiv.abyss.core.ErrorFunction.dMeanSquaredError;
 import static in.mcxiv.abyss.core.ErrorFunction.meanSquaredError;
 import static in.mcxiv.abyss.data.representation.PolyData.sumAll;
 
-class FullyConnected2Test {
+class FullyConnectedUnit2Test {
 
     @Test
     void testBasic() {
@@ -20,7 +20,7 @@ class FullyConnected2Test {
         var y = new Array1DPolyData(4, 1);
         y.fill(List.of(10, 1, -1, -2).iterator()::next);
 
-        var model = new FullyConnected(1);
+        var model = new FullyConnectedUnit(1);
         model.weights.addPreprocessor(data -> data.fill(0.1f));
         model.initialize(x);
 

@@ -3,7 +3,10 @@ package in.mcxiv.abyss.utilities;
 import in.mcxiv.abyss.interfaces.CopyCloneable;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -18,8 +21,6 @@ public class Pool<T> {
     BiConsumer<T, Integer> ensureWeight;
 
     int liveEntities = 0;
-    boolean inspectionMode = true;
-    HashMap<String, Integer> callers = new HashMap<>();
 
     AtomicInteger dummy = new AtomicInteger(0);
     Comparator<T> dummyComparator;
@@ -43,7 +44,6 @@ public class Pool<T> {
     }
 
     public Pool(Class<T> clazz, Function<T, Integer> getWeights, Function<Integer, T> constructor, BiConsumer<T, Integer> ensureWeight) {
-//        this.pool = new PriorityQueue<>(Comparator.comparing(comparator));
         this.pool = new LinkedList<>();
         this.clazz = clazz;
         this.getWeights = getWeights;
@@ -52,21 +52,11 @@ public class Pool<T> {
         this.dummyComparator = (a, _) -> getWeights.apply(a).compareTo(dummy.get());
         this.ensureWeight = ensureWeight;
 
-        new Recorder(() -> 1f * liveEntities);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("HERE: ");
-            callers.entrySet().stream().map(sa -> sa.getKey() + "= " + sa.getValue()).forEach(System.out::println);
-        }));
+        new Recorder(() -> 1f * liveEntities, clazz.getSimpleName() + "Pool Entities");
     }
 
     public void free(Object source) {
         liveEntities--;
-
-        if (inspectionMode) {
-            String callerMeta = Misc.getCallerMeta(0);
-            callers.put(callerMeta, callers.getOrDefault(callerMeta, 0) - 1);
-        }
 
         if (!clazz.isInstance(source)) throw new IllegalStateException();
         var data = clazz.cast(source);
@@ -83,10 +73,8 @@ public class Pool<T> {
     }
 
     public T issue(Object weight) {
-        T issue;
-        if (clazz.isInstance(weight)) issue = issue((int) getWeights.apply(clazz.cast(weight)));
-        else issue = issue(1);
-        return issue;
+        if (clazz.isInstance(weight)) return issue((int) getWeights.apply(clazz.cast(weight)));
+        return issue(1);
     }
 
     public T clone(Object source) {
@@ -96,7 +84,6 @@ public class Pool<T> {
             cc.copyTo((CopyCloneable) issue);
             return issue;
         } else throw new IllegalStateException();
-//        } else return (T) MoreMath.clone(source);
     }
 
     public T issue() {
@@ -106,21 +93,12 @@ public class Pool<T> {
     public T issue(int weight) {
         liveEntities++;
 
-        T source;
-        if (pool.isEmpty()) source = constructor.apply(weight);
-        else {
-            dummy.set(weight);
-            int index = Collections.binarySearch(pool, null, dummyComparator);
-            if (index < 0) index = Math.min(~index, pool.size() - 1);
-            source = pool.remove(index);
-            if (weight > getWeights.apply(source)) ensureWeight.accept(source, weight);
-        }
-
-        if (inspectionMode) {
-            String callerMeta = Misc.getCallerMeta(0);
-            callers.put(callerMeta, callers.getOrDefault(callerMeta, 0) + 1);
-        }
-
+        if (pool.isEmpty()) return constructor.apply(weight);
+        dummy.set(weight);
+        int index = Collections.binarySearch(pool, null, dummyComparator);
+        if (index < 0) index = Math.min(~index, pool.size() - 1);
+        T source = pool.remove(index);
+        if (weight > getWeights.apply(source)) ensureWeight.accept(source, weight);
         return source;
     }
 }

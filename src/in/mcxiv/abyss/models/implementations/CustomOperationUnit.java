@@ -4,12 +4,12 @@ import in.mcxiv.abyss.data.representation.PolyData;
 import in.mcxiv.abyss.models.abstractions.MathematicalUnit;
 import in.mcxiv.abyss.utilities.Cache;
 
-public class CustomOperations extends MathematicalUnit {
+public class CustomOperationUnit extends MathematicalUnit {
 
     private ForwardUnit forwardUnit;
     private BackwardUnit backwardUnit;
 
-    public CustomOperations(ForwardUnit forwardUnit, BackwardUnit backwardUnit) {
+    public CustomOperationUnit(ForwardUnit forwardUnit, BackwardUnit backwardUnit) {
         this.forwardUnit = forwardUnit;
         this.backwardUnit = backwardUnit;
     }

@@ -3,10 +3,13 @@ package in.mcxiv.abyss.data.representation;
 import in.mcxiv.abyss.interfaces.*;
 import in.mcxiv.abyss.mathematics.AddressIterator;
 import in.mcxiv.abyss.mathematics.MoreMath;
+import in.mcxiv.abyss.utilities.Misc;
 import in.mcxiv.abyss.utilities.Pools;
 
 import java.io.Serializable;
 import java.util.Arrays;
+
+import static in.mcxiv.abyss.data.representation.SlicedPolyData.ALL;
 
 public interface PolyData extends Serializable, Cloneable, CopyCloneable<PolyData> {
 
@@ -85,7 +88,7 @@ public interface PolyData extends Serializable, Cloneable, CopyCloneable<PolyDat
     }
 
     default PolyData clone() {
-        return (PolyData) MoreMath.clone(this);
+        return (PolyData) Misc.clone(this);
     }
 
     @Override
@@ -155,8 +158,8 @@ public interface PolyData extends Serializable, Cloneable, CopyCloneable<PolyDat
     static PolyData vectorOperation(PolyData first, PolyData second, PolyData result,
                                     FloatOperation cast, FloatOperation reduce,
                                     float identity) {
-        int[] firstShape = MoreMath.functionalArrayToArray(first.dims(), first::shape);
-        int[] secondShape = MoreMath.functionalArrayToArray(second.dims(), second::shape);
+        int[] firstShape = first.shape();
+        int[] secondShape = second.shape();
         int[] resultShape = MoreMath.crossDimensions(firstShape, secondShape);
         result.reshape(resultShape);
 
@@ -175,6 +178,97 @@ public interface PolyData extends Serializable, Cloneable, CopyCloneable<PolyDat
             }
             result.set(value, address);
         }
+        return result;
+    }
+
+    static PolyData convolveOperation(PolyData first, PolyData second, PolyData result) {
+        int[] firstShape = first.shape();
+        int[] secondShape = second.shape();
+        if (first.dims() != second.dims()) throw new UnsupportedOperationException();
+        int[] resultShape = MoreMath.convolveDimensions(firstShape, secondShape);
+        result.reshape(resultShape);
+
+        var sliceFrom = new int[secondShape.length];
+        var sliceTo = Arrays.copyOf(secondShape, secondShape.length);
+        var slice = new SlicedPolyData(first, sliceFrom, sliceTo);
+        var buffer = Pools.ARRAY_POOL.issue(second);
+
+        AddressIterator resultIterator = new AddressIterator(resultShape);
+        while (resultIterator.hasNext()) {
+            int[] resultAddress = resultIterator.next();
+
+            MoreMath.sum(resultAddress, secondShape, sliceTo);
+            sliceFrom = resultAddress;
+
+            slice.initialize(first, sliceFrom, sliceTo);
+
+            result.set(sumAll(mul(slice, second, buffer)), resultAddress);
+        }
+
+        Pools.ARRAY_POOL.free(buffer);
+
+        return result;
+    }
+
+    static PolyData simpleConvolveOperationNew(PolyData first, PolyData second, PolyData result) {
+        assert first.dims() == 4 : "We only expect a batch of 2D images with color channels.";
+        assert second.dims() == 4 : "Only 2D convolutions with channel contraction and filters implemented.";
+
+        int samples = first.shape(0);
+        int width = first.shape(1);
+        int height = first.shape(2);
+        int channels = first.shape(3);
+        int f_width = second.shape(0);
+        int f_height = second.shape(1);
+        int contract = second.shape(2);
+        int filters = second.shape(3);
+        int r_width = width - f_width + 1;
+        int r_height = height - f_height + 1;
+
+        assert width >= f_width : "Insufficient width %d for convolution with %d.".formatted(width, f_width);
+        assert height >= f_height : "Insufficient height %d for convolution with %d.".formatted(height, f_height);
+        assert channels == contract : "Incompatible channels contraction for %d channels and %d contraction.".formatted(channels, contract);
+
+        result.reshape(samples, r_width, r_height, 1, filters).fill(0);
+
+        var sampleSlice = slice(first, 0, ALL, ALL, ALL);
+        var filterSlice = slice(second, ALL, ALL, ALL, 0);
+        var resultSlice = slice(result, 0, ALL, ALL, 0);
+
+        for (int sampleIdx = 0; sampleIdx < samples; sampleIdx++) {
+            for (int filterIdx = 0; filterIdx < filters; filterIdx++) {
+
+                // f_width, f_height, contract
+                slice(second, filterSlice, ALL, ALL, ALL, filterIdx);
+                // red_width, red_height, 1
+                slice(result, resultSlice, sampleIdx, ALL, ALL, ALL, filterIdx);
+
+                for (int channelIdx = 0; channelIdx < channels; channelIdx++) {
+                    // width, height, channels
+                    slice(first, sampleSlice, sampleIdx, ALL, ALL, ALL);
+                    convolveOperation(sampleSlice, filterSlice, resultSlice);
+                }
+            }
+        }
+        return result.reshape(samples, r_width, r_height, filters);
+    }
+
+    static PolyData convolveOperationNew(PolyData first, PolyData second, PolyData result, int channels) {
+        // TODO
+        //  Say, the args are like,
+        //      first    [=] [1000, 1000, 100, 100, 100, 3]
+        //      second   [=] [5, 5, 128, 64]
+        //      channels  =  2
+        //  Then, we assume,
+        //      The last 'channels' values in second are channels
+        //      The remains is the filter
+        //      The last 'len(filter)+channels' values of first after skipping 'channels' values are the ones where we apply convolution
+        //  Therefore,
+        //      #samples  =  [1000, 1000] = 1000000
+        //      sample   [=] [100,100,100,3]
+        //      filter   [=] [5,5]
+        //      channels  =  [128, 64] = 8192
+        //      result   [=] [1000, 1000, 96, 96, 128, 64]
         return result;
     }
 
@@ -295,7 +389,7 @@ public interface PolyData extends Serializable, Cloneable, CopyCloneable<PolyDat
 
     static PolyData reduceSum(PolyData first, int dim, PolyData result) {
         int[] slice = new int[first.dims()];
-        Arrays.fill(slice, SlicedPolyData.ALL);
+        Arrays.fill(slice, ALL);
         result.reshape(first.shape(dim));
         var mini = new SlicedPolyData(first, 1);
         for (int i = 0, s = first.shape(dim); i < s; i++) {
@@ -314,7 +408,7 @@ public interface PolyData extends Serializable, Cloneable, CopyCloneable<PolyDat
         return slice.slice(first);
     }
 
-    static PolyData slice(PolyData first, SlicedPolyData result, int... slice) {
+    static SlicedPolyData slice(PolyData first, SlicedPolyData result, int... slice) {
         return result.initialize(first, slice, slice);
     }
 

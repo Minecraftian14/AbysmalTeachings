@@ -12,6 +12,6 @@ class PyPlotTest {
 
     @Test
     void simpleTest() {
-        plotBar(IntStream.range(0, 10000).mapToDouble(v -> v + 1000 * Math.random()).mapToObj(d -> ((float) d)).toList(), true);
+        plotBar("Title", IntStream.range(0, 10000).mapToDouble(v -> v + 1000 * Math.random()).mapToObj(d -> ((float) d)).toList(), true);
     }
 }

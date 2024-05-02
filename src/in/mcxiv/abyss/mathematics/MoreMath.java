@@ -2,7 +2,6 @@ package in.mcxiv.abyss.mathematics;
 
 import in.mcxiv.abyss.interfaces.IntToIntFunction;
 
-import java.io.*;
 import java.util.Arrays;
 
 public final class MoreMath {
@@ -80,6 +79,14 @@ public final class MoreMath {
         return result;
     }
 
+    public static int[] convolveDimensions(int[] first, int[] second) {
+        if (second.length > first.length) throw new IllegalStateException();
+        int[] result = first.clone();
+        for (int i = 0; i < second.length; i++)
+            result[i] = first[i] - second[i] + 1;
+        return result;
+    }
+
     public static boolean functionalArrayEquals(int length, IntToIntFunction array1, IntToIntFunction array2) {
         for (int i = 0; i < length; i++)
             if (array1.get(i) != array2.get(i)) return false;
@@ -104,6 +111,10 @@ public final class MoreMath {
 
     public static float random() {
         return (float) Math.random();
+    }
+
+    public static float random(float height) {
+        return height * (float) Math.random();
     }
 
     public static int randomInt() {
@@ -136,22 +147,12 @@ public final class MoreMath {
         return result;
     }
 
-    public static Object clone(Object object) {
-        try {
-            var bos = new ByteArrayOutputStream();
-            var oos = new ObjectOutputStream(bos);
-            oos.writeObject(object);
-            oos.close();
-
-            var bis = new ByteArrayInputStream(bos.toByteArray());
-            var ois = new ObjectInputStream(bis);
-            Object clone = ois.readObject();
-            ois.close();
-
-            return clone;
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public static int[] sum(int[] first, int[] second, int[] result) {
+        if (result == null) result = new int[first.length];
+        if (result.length != first.length || second.length != first.length)
+            throw new IllegalStateException();
+        for (int i = 0; i < first.length; i++)
+            result[i] = first[i] + second[i];
+        return result;
     }
-
 }
