@@ -1,7 +1,5 @@
 package in.mcxiv.abyss.models.implementations;
 
-import in.mcxiv.abyss.core.ActivationFunction;
-import in.mcxiv.abyss.data.presets.TestDataset;
 import in.mcxiv.abyss.data.representation.Array1DPolyData;
 import in.mcxiv.abyss.data.representation.PolyData;
 import in.mcxiv.abyss.feeders.SingletonFeeder;
@@ -16,9 +14,8 @@ import static in.mcxiv.abyss.core.ScoringFunction.accuracy;
 import static in.mcxiv.abyss.core.ScoringFunction.fuzzy_accuracy;
 import static in.mcxiv.abyss.data.representation.Array1DPolyData.n;
 import static in.mcxiv.abyss.data.representation.PolyData.unaryOperation;
-import static org.junit.jupiter.api.Assertions.*;
 
-class ConvolutionalUnitTest {
+class VeryLimitedAndPracticallyUselessConvolutionalUnitTest {
 
     @Test
     void basicTest() {
@@ -35,7 +32,7 @@ class ConvolutionalUnitTest {
         System.out.println("y = " + y);
 //        var feeder = new SingletonFeeder(dataset);
         var feeder = new SingletonFeeder(x, y);
-        var model = new ConvolutionalUnit(97);
+        var model = new VeryLimitedAndPracticallyUselessConvolutionalUnit(97);
         model.filter.fill(0.1f * MoreMath.random());
         model.initialize(x);
 

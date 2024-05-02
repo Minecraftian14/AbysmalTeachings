@@ -1,8 +1,6 @@
 package in.mcxiv.abyss.models.implementations;
 
 import in.mcxiv.abyss.data.representation.*;
-import in.mcxiv.abyss.initializers.Additive2DParameterInitializer;
-import in.mcxiv.abyss.initializers.Multiplicative2DParameterInitializer;
 import in.mcxiv.abyss.mathematics.MoreMath;
 import in.mcxiv.abyss.models.abstractions.MathematicalUnit;
 import in.mcxiv.abyss.utilities.Cache;
@@ -10,11 +8,11 @@ import in.mcxiv.abyss.utilities.Cache;
 import static in.mcxiv.abyss.data.representation.PolyData.*;
 import static in.mcxiv.abyss.utilities.Pools.ARRAY_POOL;
 
-public class ConvolutionalUnit extends MathematicalUnit {
+public class VeryLimitedAndPracticallyUselessConvolutionalUnit extends MathematicalUnit {
 
     public PolyData filter;
 
-    public ConvolutionalUnit(int hiddenUnits) {
+    public VeryLimitedAndPracticallyUselessConvolutionalUnit(int hiddenUnits) {
         filter = new Array1DPolyData(3, 3);
 //        addInitiazables(filter, bias);
     }
