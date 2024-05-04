@@ -8,7 +8,7 @@ import static in.mcxiv.abyss.data.representation.PolyData.unaryOperation;
 
 public class SimpleAdditiveUpdater implements Updater {
 
-    public float learning_rate = 0.1f;
+    public float learning_rate = 0.01f;
 
     @Override
     public void apply(Cache cache) {

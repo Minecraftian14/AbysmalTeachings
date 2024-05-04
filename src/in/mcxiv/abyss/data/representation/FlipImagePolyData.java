@@ -1,7 +1,5 @@
 package in.mcxiv.abyss.data.representation;
 
-import in.mcxiv.abyss.mathematics.MoreMath;
-
 public class FlipImagePolyData extends PolyDataPolyData {
 
     int[] shapeCache;
@@ -13,8 +11,8 @@ public class FlipImagePolyData extends PolyDataPolyData {
 
     @Override
     public PolyData reshape(int[] shape) {
-        shapeCache =shape.clone();
-        return  super.reshape(shapeCache);
+        shapeCache = shape.clone();
+        return super.reshape(shapeCache);
     }
 
     @Override

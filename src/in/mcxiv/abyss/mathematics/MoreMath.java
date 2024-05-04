@@ -117,6 +117,13 @@ public final class MoreMath {
         return height * (float) Math.random();
     }
 
+    public static float randomNormal() {
+        double u1 = Math.random();
+        double u2 = Math.random();
+        double z1 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        return (float) z1;
+    }
+
     public static int randomInt() {
         return (int) (Integer.MAX_VALUE * Math.random());
     }

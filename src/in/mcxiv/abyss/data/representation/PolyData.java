@@ -210,9 +210,9 @@ public interface PolyData extends Serializable, Cloneable, CopyCloneable<PolyDat
         return result;
     }
 
-    static PolyData simpleConvolveOperationNew(PolyData first, PolyData second, PolyData result) {
-        assert first.dims() == 4 : "We only expect a batch of 2D images with color channels.";
-        assert second.dims() == 4 : "Only 2D convolutions with channel contraction and filters implemented.";
+    static PolyData imageConvolveForward(PolyData first, PolyData second, PolyData result) {
+        assert first.dims() == 4 : "We only expect a batch of 2D images with color channels as first argument. Received %s.".formatted(Arrays.toString(first.shape()));
+        assert second.dims() == 4 : "Only 2D convolutions with channel contraction and filters implemented. Received %s.".formatted(Arrays.toString(second.shape()));
 
         int samples = first.shape(0);
         int width = first.shape(1);
@@ -238,19 +238,53 @@ public interface PolyData extends Serializable, Cloneable, CopyCloneable<PolyDat
         for (int sampleIdx = 0; sampleIdx < samples; sampleIdx++) {
             for (int filterIdx = 0; filterIdx < filters; filterIdx++) {
 
+                // width, height, channels
+                slice(first, sampleSlice, sampleIdx, ALL, ALL, ALL);
                 // f_width, f_height, contract
                 slice(second, filterSlice, ALL, ALL, ALL, filterIdx);
                 // red_width, red_height, 1
                 slice(result, resultSlice, sampleIdx, ALL, ALL, ALL, filterIdx);
 
-                for (int channelIdx = 0; channelIdx < channels; channelIdx++) {
-                    // width, height, channels
-                    slice(first, sampleSlice, sampleIdx, ALL, ALL, ALL);
-                    convolveOperation(sampleSlice, filterSlice, resultSlice);
-                }
+                convolveOperation(sampleSlice, filterSlice, resultSlice);
             }
         }
         return result.reshape(samples, r_width, r_height, filters);
+    }
+
+    static PolyData imageConvolveBackward(PolyData first, PolyData second, PolyData result) {
+        assert first.dims() == 4 : "We only expect a batch of 2D images with color channels as first argument. Received %s.".formatted(Arrays.toString(first.shape()));
+        assert second.dims() == 4 : "We only expect a batch of 2D images with filters as second argument. Received %s.".formatted(Arrays.toString(second.shape()));
+
+        int samples = first.shape(0);
+        int width = first.shape(1);
+        int height = first.shape(2);
+        int channels = first.shape(3);
+        int r_width = second.shape(1);
+        int r_height = second.shape(2);
+        int filters = second.shape(3);
+        int f_width = width - r_width + 1;
+        int f_height = height - r_height + 1;
+
+//        assert width >= r_width;
+//        assert height >= r_height;
+
+        result.reshape(1, f_width, f_height, channels, filters).fill(0);
+
+        var sampleSlice = slice(first, ALL, ALL, ALL, 0);
+        var derivativeSlice = slice(second, ALL, ALL, ALL, 0);
+        var filerSlice = slice(result, ALL, ALL, ALL, 0, 0);
+
+        for (int channelIdx = 0; channelIdx < channels; channelIdx++) {
+            for (int filterIdx = 0; filterIdx < filters; filterIdx++) {
+                slice(first, sampleSlice, ALL, ALL, ALL, channelIdx);
+                slice(second, derivativeSlice, ALL, ALL, ALL, filterIdx);
+                slice(result, filerSlice, ALL, ALL, ALL, channelIdx, filterIdx);
+
+                convolveOperation(sampleSlice, derivativeSlice, filerSlice);
+            }
+        }
+
+        return result.reshape(f_width, f_height, channels, filters);
     }
 
     static PolyData convolveOperationNew(PolyData first, PolyData second, PolyData result, int channels) {

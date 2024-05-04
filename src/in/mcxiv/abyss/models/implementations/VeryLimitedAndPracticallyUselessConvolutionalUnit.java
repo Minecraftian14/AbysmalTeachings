@@ -39,7 +39,7 @@ public class VeryLimitedAndPracticallyUselessConvolutionalUnit extends Mathemati
 //        convolveOperation(da_out, filter, dweights);
         convolveOperation(a_in, da_out, dweights);
 
-        var pad_da_out = new PadImagePolyData(da_out, 2, 0);
+        var pad_da_out = new PadImagePolyData(da_out, 0, 2);
         var flip_filter = new FlipImagePolyData(filter);
         convolveOperation(pad_da_out, flip_filter, da_in);
 

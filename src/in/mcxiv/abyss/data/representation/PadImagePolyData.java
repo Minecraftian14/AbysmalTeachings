@@ -2,24 +2,25 @@ package in.mcxiv.abyss.data.representation;
 
 public class PadImagePolyData extends PolyDataPolyData {
 
-    private int padSize;
+    private int[] padSize;
     private float padValue;
 
-    public PadImagePolyData(PolyData polyData, int padSize, float padValue) {
+    public PadImagePolyData(PolyData polyData, float padValue, int...padSize) {
         super(polyData);
+        assert padSize.length == polyData.dims();
         this.padSize = padSize;
         this.padValue = padValue;
     }
 
     @Override
     public int shape(int dim) {
-        return super.shape(dim) + 2 * padSize;
+        return super.shape(dim) + 2 * padSize[dim];
     }
 
     @Override
     public PolyData reshape(int[] shape) {
         for (int i = 0; i < shape.length; i++)
-            shape[i] -= 2 * padSize;
+            shape[i] -= 2 * padSize[i];
         super.reshape(shape);
         return this;
     }
@@ -27,9 +28,9 @@ public class PadImagePolyData extends PolyDataPolyData {
     @Override
     public float get(int... address) {
         for (int i = 0; i < address.length; i++) {
-            if (address[i] < padSize || address[i] >= super.shape(i) + padValue)
+            if (address[i] < padSize[i] || address[i] >= super.shape(i) + padValue)
                 return padValue;
-            else address[i] -= padSize;
+            else address[i] -= padSize[i];
         }
         return super.get(address);
     }
@@ -37,11 +38,11 @@ public class PadImagePolyData extends PolyDataPolyData {
     @Override
     public void set(float value, int... address) {
         for (int i = 0; i < address.length; i++) {
-            if (address[i] < padSize || address[i] >= super.shape(i) + padValue) {
+            if (address[i] < padSize[i] || address[i] >= super.shape(i) + padValue) {
                 System.err.println("Setting value to pad space; was it intentional?");
                 padValue = value;
                 return;
-            } else address[i] -= padSize;
+            } else address[i] -= padSize[i];
         }
         super.set(value, address);
     }

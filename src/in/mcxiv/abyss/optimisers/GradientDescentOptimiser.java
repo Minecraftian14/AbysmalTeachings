@@ -17,7 +17,7 @@ public class GradientDescentOptimiser extends Optimiser {
     ErrorFunction error = ErrorFunction.meanSquaredError;
     ErrorFunction dError = ErrorFunction.dMeanSquaredError;
     Updater updater = new SimpleAdditiveUpdater();
-    int epoch = 100;
+    int epoch = 20;
 
     public GradientDescentOptimiser(MathematicalUnit model, Feeder trainFeeder, Feeder testFeeder) {
         this.model = model;
@@ -36,6 +36,7 @@ public class GradientDescentOptimiser extends Optimiser {
         for (int i = 0; i < epoch; i++) {
 
             eventListeners.forEach(TrainingEventListener::nextEpochTrainingStarted);
+            System.out.println("Epoch " + (i + 1));
 
             while (trainFeeder.hasNext()) {
 
