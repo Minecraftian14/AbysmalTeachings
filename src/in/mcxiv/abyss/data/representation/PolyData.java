@@ -7,6 +7,7 @@ import in.mcxiv.abyss.utilities.Misc;
 import in.mcxiv.abyss.utilities.Pools;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static in.mcxiv.abyss.data.representation.SlicedPolyData.ALL;
@@ -71,6 +72,14 @@ public interface PolyData extends Serializable, Cloneable, CopyCloneable<PolyDat
         AddressIterator iterator = new AddressIterator(shape);
         while (iterator.hasNext()) data[i++] = get(iterator.next());
         return data;
+    }
+
+    default ArrayList<Float> exportList() {
+        int[] shape = MoreMath.functionalArrayToArray(this.dims(), this::shape);
+        var list = new ArrayList<Float>(MoreMath.multiplyItems(shape));
+        AddressIterator iterator = new AddressIterator(shape);
+        while (iterator.hasNext()) list.add(get(iterator.next()));
+        return list;
     }
 
     default String stringify() {
@@ -315,6 +324,59 @@ public interface PolyData extends Serializable, Cloneable, CopyCloneable<PolyDat
         return result;
     }
 
+    static PolyData reduceOperation(PolyData first, PolyData result, int dim, FloatOperation operation) {
+        int[] resultShape = new int[first.dims() - 1];
+        for (int i = 0, j = 0, s = first.dims(); i < s; i++)
+            if (i != dim)
+                resultShape[j++] = first.shape(i);
+        result.reshape(resultShape);
+        var iterator = new AddressIterator(resultShape);
+        int[] firstAddress = first.shape();
+        int chosenDimLength = first.shape(resultShape.length);
+        while (iterator.hasNext()) {
+            int[] secondAddress = iterator.next();
+            System.arraycopy(secondAddress, 0, firstAddress, 0, dim);
+            System.arraycopy(secondAddress, dim, firstAddress, dim + 1, secondAddress.length - dim);
+            firstAddress[dim] = 0;
+            float root = first.get(firstAddress);
+            for (int i = 1; i < chosenDimLength; i++) {
+                firstAddress[dim] = i;
+                root = operation.operate(root, first.get(firstAddress));
+            }
+            result.set(root, secondAddress);
+        }
+        return result;
+    }
+
+    static PolyData indexOperation(PolyData first, PolyData result, int dim, FloatOperation operation) {
+        int[] resultShape = new int[first.dims() - 1];
+        for (int i = 0, j = 0, s = first.dims(); i < s; i++)
+            if (i != dim)
+                resultShape[j++] = first.shape(i);
+        result.reshape(resultShape);
+        var iterator = new AddressIterator(resultShape);
+        int[] firstAddress = first.shape();
+        int chosenDimLength = first.shape(resultShape.length);
+        while (iterator.hasNext()) {
+            int[] secondAddress = iterator.next();
+            System.arraycopy(secondAddress, 0, firstAddress, 0, dim);
+            System.arraycopy(secondAddress, dim, firstAddress, dim + 1, secondAddress.length - dim);
+            firstAddress[dim] = 0;
+            float root = first.get(firstAddress);
+            int rootIndex = 0;
+            for (int i = 1; i < chosenDimLength; i++) {
+                firstAddress[dim] = i;
+                float compare = operation.operate(root, first.get(firstAddress));
+                if (root != compare) {
+                    root = compare;
+                    rootIndex = i;
+                }
+            }
+            result.set(rootIndex, secondAddress);
+        }
+        return result;
+    }
+
     static PolyData add(PolyData first, float second) {
         return add(first, second, Pools.ARRAY_POOL.issue(first));
     }
@@ -401,6 +463,10 @@ public interface PolyData extends Serializable, Cloneable, CopyCloneable<PolyDat
 
     static float sumAll(PolyData first) {
         return accumulatingOperation(first, Float::sum);
+    }
+
+    static PolyData argMax(PolyData first, PolyData result, int dim) {
+        return indexOperation(first, result, dim, Math::max);
     }
 
     static PolyData sumAlong(PolyData first, int dim, PolyData result) {

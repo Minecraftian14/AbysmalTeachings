@@ -9,6 +9,7 @@ import in.mcxiv.abyss.feeders.SingletonFeeder;
 import in.mcxiv.abyss.mathematics.MoreMath;
 import in.mcxiv.abyss.optimisers.GradientDescentOptimiser;
 import in.mcxiv.abyss.optimisers.events.PlotLossAfterTraining;
+import in.mcxiv.abyss.plot.PyPlot;
 import in.mcxiv.abyss.utilities.Cache;
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +22,7 @@ import static in.mcxiv.abyss.core.ErrorFunction.meanSquaredError;
 import static in.mcxiv.abyss.core.ScoringFunction.accuracy;
 import static in.mcxiv.abyss.core.ScoringFunction.fuzzy_accuracy;
 import static in.mcxiv.abyss.data.representation.Array1DPolyData.n;
-import static in.mcxiv.abyss.data.representation.PolyData.slice;
-import static in.mcxiv.abyss.data.representation.PolyData.unaryOperation;
+import static in.mcxiv.abyss.data.representation.PolyData.*;
 
 class MultiLayerUnitTest {
     @Test
@@ -125,8 +125,11 @@ class MultiLayerUnitTest {
         optimiser.fit();
 
         System.out.println("Loss       : " + meanSquaredError.netCalculate(y, model.forward(x, n(), new Cache()), n()));
-        System.out.println("Accuracy   : " + accuracy.score(y, model.forward(x, n(), new Cache())));
+        System.out.println("Accuracy   : " + accuracy.score(argMax(y, n(), 1).reshape(limlen, 1), argMax(model.forward(x, n(), new Cache()), n(), 1).reshape(limlen, 1)));
         System.out.println("F Accuracy : " + fuzzy_accuracy.score(y, model.forward(x, n(), new Cache())));
+
+//        PyPlot.plotBar("y", argMax(y, n(), 1).exportList(), false);
+//        PyPlot.plotBar("yp", argMax(model.forward(x, n(), new Cache()), n(), 1).exportList(), false);
     }
 
     @Test

@@ -74,6 +74,34 @@ class PolyDataTest {
     }
 
     @Test
+    void testReduce() {
+        var m1 = Array1DPolyData.fromArray(
+                3, 4, 2, 5,
+                5, 6, 3, 4,
+                6, 7, 6, 5,
+                4, 6, 5, 7,
+                4, 5, 6, 3,
+                4, 6, 5, 7
+        ).reshape(6, 4);
+        assertArrayEquals(new float[]{6f, 7f, 6f, 7f}, reduceOperation(m1, n(), 0, Math::max).export());
+        assertArrayEquals(new float[]{5f, 6f, 7f, 7f, 6f, 7f}, reduceOperation(m1, n(), 1, Math::max).export());
+    }
+
+    @Test
+    void testIndex() {
+        var m1 = Array1DPolyData.fromArray(
+                3, 4, 2, 5,
+                5, 6, 3, 4,
+                6, 7, 6, 5,
+                4, 6, 5, 7,
+                4, 5, 6, 3,
+                4, 6, 5, 7
+        ).reshape(6, 4);
+        assertArrayEquals(new float[]{2f, 2f, 2f, 3f}, indexOperation(m1, n(), 0, Math::max).export());
+        assertArrayEquals(new float[]{3f, 1f, 1f, 3f, 2f, 3f}, indexOperation(m1, n(), 1, Math::max).export());
+    }
+
+    @Test
     void testSlice() {
         var data = new Array1DPolyData(3, 3, 3);
         var ai = new AtomicInteger();

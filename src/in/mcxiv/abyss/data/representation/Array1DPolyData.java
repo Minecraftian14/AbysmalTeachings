@@ -2,13 +2,9 @@ package in.mcxiv.abyss.data.representation;
 
 import in.mcxiv.abyss.mathematics.MoreMath;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
 
 public class Array1DPolyData implements PolyData {
 
@@ -20,8 +16,12 @@ public class Array1DPolyData implements PolyData {
     }
 
     public Array1DPolyData(int... shape) {
+        this(new float[MoreMath.multiplyItems(shape)], shape);
+    }
+
+    public Array1DPolyData(float[] data, int... shape) {
+        this.data = data;
         this.shape = shape;
-        this.data = new float[MoreMath.multiplyItems(shape)];
     }
 
     public static Array1DPolyData n() {
@@ -30,6 +30,10 @@ public class Array1DPolyData implements PolyData {
 
     public static PolyData fromStream(Supplier<Float> supplier, int... shape) {
         return new Array1DPolyData(shape).fill(supplier::get);
+    }
+
+    public static PolyData fromArray(float... floats) {
+        return new Array1DPolyData(floats, floats.length, 1);
     }
 
     public static PolyData fromList(List<Float> list) {
