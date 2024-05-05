@@ -113,6 +113,10 @@ public final class MoreMath {
         return (float) Math.random();
     }
 
+    public static float random10() {
+        return 2 * random() - 1;
+    }
+
     public static float random(float height) {
         return height * (float) Math.random();
     }
@@ -126,6 +130,10 @@ public final class MoreMath {
 
     public static int randomInt() {
         return (int) (Integer.MAX_VALUE * Math.random());
+    }
+
+    public static int randomInt(int height) {
+        return (int) (height * Math.random());
     }
 
     public static int randomBit() {

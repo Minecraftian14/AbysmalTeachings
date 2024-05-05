@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="AbysmalTeachings" />
+    <orderEntry type="module-library">
+      <library name="jcuda" type="repository">
+        <properties maven-id="org.jcuda:jcuda:11.6.1" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-windows-x86_64.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jcuda.jcublas" type="repository">
+        <properties maven-id="org.jcuda:jcublas:11.6.1" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jcublas-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-windows-x86_64.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcublas-natives-11.6.1-windows-x86_64.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/lib/jcublas-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcublas-natives-11.6.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/jcublas-11.6.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcublas-natives-11.6.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jcuda.jcufft" type="repository">
+        <properties maven-id="org.jcuda:jcufft:11.6.1" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jcufft-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-windows-x86_64.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcufft-natives-11.6.1-windows-x86_64.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/lib/jcufft-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcufft-natives-11.6.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jcuda.jcusparse" type="repository">
+        <properties maven-id="org.jcuda:jcusparse:11.6.1" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jcusparse-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-windows-x86_64.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcusparse-natives-11.6.1-windows-x86_64.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/lib/jcusparse-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcusparse-natives-11.6.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jcuda.jcusolver" type="repository">
+        <properties maven-id="org.jcuda:jcusolver:11.6.1" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jcusolver-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-windows-x86_64.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcusparse-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcusparse-natives-11.6.1-windows-x86_64.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcusolver-natives-11.6.1-windows-x86_64.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/lib/jcusolver-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcusparse-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcusparse-natives-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcusolver-natives-11.6.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jcuda.jcurand" type="repository">
+        <properties maven-id="org.jcuda:jcurand:11.6.1" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jcurand-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-windows-x86_64.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcurand-natives-11.6.1-windows-x86_64.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/lib/jcurand-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcurand-natives-11.6.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="jcuda.jcudnn" type="repository">
+        <properties maven-id="org.jcuda:jcudnn:11.6.1" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jcudnn-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-windows-x86_64.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcublas-11.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcublas-natives-11.6.1-windows-x86_64.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcudnn-natives-11.6.1-windows-x86_64.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/lib/jcudnn-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcuda-natives-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcublas-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcublas-natives-11.6.1-javadoc.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcudnn-natives-11.6.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library name="junit-jupiter-5.8.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/junit-jupiter-5.8.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library name="JUnit5.8.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-5.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-api-5.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/opentest4j-1.2.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/junit-platform-commons-1.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/apiguardian-api-1.1.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-params-5.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/junit-jupiter-engine-5.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/junit-platform-engine-1.8.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+  </component>
+</module>

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AbysmalTeachings.iml" filepath="$PROJECT_DIR$/AbysmalTeachings.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JCudaPort/JCudaPort.iml" filepath="$PROJECT_DIR$/JCudaPort/JCudaPort.iml" />
     </modules>
   </component>
 </project>

@@ -8,8 +8,8 @@ import java.util.function.Supplier;
 
 public class Array1DPolyData implements PolyData {
 
-    int[] shape;
-    float[] data;
+    public int[] shape;
+    public float[] data;
 
     public Array1DPolyData() {
         this(1);
