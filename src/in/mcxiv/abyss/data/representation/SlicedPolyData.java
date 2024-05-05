@@ -93,7 +93,7 @@ public class SlicedPolyData extends PolyDataPolyData {
 
         if (Arrays.equals(this.shape, shape))
             return this;
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("A slice created for %s cannot be reshaped to %s.".formatted(Arrays.toString(this.shape), Arrays.toString(shape)));
     }
 
     @Override

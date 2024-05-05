@@ -4,7 +4,6 @@ import in.mcxiv.abyss.core.ErrorFunction;
 import in.mcxiv.abyss.data.representation.Array1DPolyData;
 import in.mcxiv.abyss.feeders.Feeder;
 import in.mcxiv.abyss.models.abstractions.MathematicalUnit;
-import in.mcxiv.abyss.updators.SimpleAdditiveUpdater;
 import in.mcxiv.abyss.updators.Updater;
 import in.mcxiv.abyss.utilities.Cache;
 import in.mcxiv.abyss.utilities.Pools;
@@ -16,14 +15,15 @@ public class GradientDescentOptimiser extends Optimiser {
     Feeder testFeeder;
     ErrorFunction error = ErrorFunction.meanSquaredError;
     ErrorFunction dError = ErrorFunction.dMeanSquaredError;
-    Updater updater = new SimpleAdditiveUpdater();
-    int epoch = 100;
+    Updater updater;
+    public int epoch = 100;
 
-    public GradientDescentOptimiser(MathematicalUnit model, Feeder trainFeeder, Feeder testFeeder) {
+    public GradientDescentOptimiser(MathematicalUnit model, Feeder trainFeeder, Feeder testFeeder, Updater updater) {
         this.model = model;
         this.trainFeeder = trainFeeder;
         this.testFeeder = testFeeder;
         this.eventListeners.add(trainFeeder);
+        this.updater = updater;
     }
 
     @Override
@@ -36,7 +36,6 @@ public class GradientDescentOptimiser extends Optimiser {
         for (int i = 0; i < epoch; i++) {
 
             eventListeners.forEach(TrainingEventListener::nextEpochTrainingStarted);
-            System.out.println("Epoch " + (i + 1));
 
             while (trainFeeder.hasNext()) {
 

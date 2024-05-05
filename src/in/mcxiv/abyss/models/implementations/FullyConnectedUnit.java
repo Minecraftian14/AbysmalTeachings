@@ -16,9 +16,6 @@ public class FullyConnectedUnit extends MathematicalUnit {
     public LatePolyData weights;
     LatePolyData bias;
 
-//    PolyData dweights = new Array1DPolyData(1);
-//    PolyData dbias = new Array1DPolyData(1);
-
     public FullyConnectedUnit(int hiddenUnits) {
         weights = new LatePolyData(new Multiplicative2DParameterInitializer(hiddenUnits));
         bias = new LatePolyData(new Additive2DParameterInitializer(hiddenUnits));
@@ -33,8 +30,8 @@ public class FullyConnectedUnit extends MathematicalUnit {
 
     @Override
     public PolyData forward(PolyData a_in, PolyData a_out, Cache cache) {
-        cross(a_in, weights, a_out);
-        add(a_out, bias, a_out);
+        a_in.cross(weights, a_out);
+        a_out.add( bias, a_out);
         cache.put(this, "a_in", ARRAY_POOL.clone(a_in));
         return a_out;
     }
@@ -46,9 +43,9 @@ public class FullyConnectedUnit extends MathematicalUnit {
         var dweights = ARRAY_POOL.issue(weights);
         var dbias = ARRAY_POOL.issue(bias);
 
-        cross(a_in.transpose(), da_out, dweights);
-        sumAlong(da_out, 0, dbias);
-        cross(da_out, weights.transpose(), da_in);
+        a_in.transpose().cross( da_out, dweights);
+        da_out.sumAlong(da_out, 0, dbias);
+        da_out.cross( weights.transpose(), da_in);
 
         cache.putParameter("weights", weights, dweights);
         cache.putParameter("bias", bias, dbias);

@@ -6,14 +6,15 @@ import in.mcxiv.abyss.feeders.SingletonFeeder;
 import in.mcxiv.abyss.mathematics.MoreMath;
 import in.mcxiv.abyss.optimisers.GradientDescentOptimiser;
 import in.mcxiv.abyss.optimisers.events.PlotLossAfterTraining;
+import in.mcxiv.abyss.updators.SimpleAdditiveUpdater;
 import in.mcxiv.abyss.utilities.Cache;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static in.mcxiv.abyss.core.ErrorFunction.meanSquaredError;
 import static in.mcxiv.abyss.core.ScoringFunction.accuracy;
 import static in.mcxiv.abyss.core.ScoringFunction.fuzzy_accuracy;
 import static in.mcxiv.abyss.data.representation.Array1DPolyData.n;
-import static in.mcxiv.abyss.data.representation.PolyData.unaryOperation;
 
 class VeryLimitedAndPracticallyUselessConvolutionalUnitTest {
 
@@ -27,7 +28,7 @@ class VeryLimitedAndPracticallyUselessConvolutionalUnitTest {
         x.fill(MoreMath::random);
         y.fill(MoreMath::random);
 
-        unaryOperation(x, x, f -> 2 * f - 1);
+        x.unaryOperation(x, x, f -> 2 * f - 1);
         System.out.println("x = " + x);
         System.out.println("y = " + y);
 //        var feeder = new SingletonFeeder(dataset);
@@ -40,7 +41,7 @@ class VeryLimitedAndPracticallyUselessConvolutionalUnitTest {
         System.out.println("Accuracy   : " + accuracy.score(y, model.forward(x, n(), new Cache())));
         System.out.println("F Accuracy : " + fuzzy_accuracy.score(y, model.forward(x, n(), new Cache())));
 
-        var optimiser = new GradientDescentOptimiser(model, feeder, null);
+        var optimiser = new GradientDescentOptimiser(model, feeder, null, new SimpleAdditiveUpdater(0.01f));
         optimiser.addListener(new PlotLossAfterTraining());
         optimiser.fit();
 

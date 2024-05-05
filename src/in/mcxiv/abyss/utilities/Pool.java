@@ -13,6 +13,8 @@ import java.util.function.Function;
 
 public class Pool<T> {
 
+    public static boolean RECORD_POOL_DATA = true;
+
     List<T> pool;
     Class<T> clazz;
     Function<T, Integer> getWeights;
@@ -52,7 +54,8 @@ public class Pool<T> {
         this.dummyComparator = (a, _) -> getWeights.apply(a).compareTo(dummy.get());
         this.ensureWeight = ensureWeight;
 
-        new Recorder(() -> 1f * liveEntities, clazz.getSimpleName() + "Pool Entities");
+        if (RECORD_POOL_DATA)
+            new Recorder(() -> 1f * liveEntities, clazz.getSimpleName() + "Pool Entities");
     }
 
     public void free(Object source) {

@@ -31,6 +31,7 @@ public class PyPlot {
             int s = array.size(), k = s / TRUNCATION_THRESHOLD;
             truncate = truncate && s >= TRUNCATION_THRESHOLD;
             File file = File.createTempFile("plot_data", null);
+            file.deleteOnExit();
             var writer = new OutputStreamWriter(new FileOutputStream(file));
             for (int i = 0; i < s; i++) {
                 if (truncate && i % k != 0) continue;

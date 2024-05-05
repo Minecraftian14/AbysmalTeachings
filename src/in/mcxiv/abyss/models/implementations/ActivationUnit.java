@@ -25,7 +25,7 @@ public class ActivationUnit extends CustomOperationUnit {
         // d activation / d inputs
         super.backward(outputs, outputs, cache);
         // d loss / d inputs
-        PolyData.mul(da_out, outputs, da_in);
+        da_out.mul( outputs, da_in);
         ARRAY_POOL.free(outputs);
         return da_in;
     }

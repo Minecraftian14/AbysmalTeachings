@@ -128,6 +128,10 @@ public final class MoreMath {
         return (int) (Integer.MAX_VALUE * Math.random());
     }
 
+    public static int randomBit() {
+        return Math.random() > .5 ? 1 : 0;
+    }
+
     public static int[] removed(int[] array, int index) {
         int[] result = new int[array.length - 1];
         System.arraycopy(array, 0, result, 0, index);

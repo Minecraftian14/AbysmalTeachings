@@ -27,6 +27,11 @@ public final class Pools {
     @SuppressWarnings("rawtypes")
     private static final HashMap<Class, Pool> POOLS = new HashMap<>();
 
+    static {
+        POOLS.put(Array1DPolyData.class, ARRAY_POOL);
+        POOLS.put(SlicedPolyData.class, SLICE_POOL);
+    }
+
     public static <T> Pool<T> getPool(Class<T> clazz) {
         if (POOLS.containsKey(clazz)) return POOLS.get(clazz);
         var pool = new Pool<>(clazz);
@@ -43,7 +48,7 @@ public final class Pools {
         POOLS.put(clazz, pool);
     }
 
-    public static <T> void free(Class<T> clazz, T source) {
-        getPool(clazz).free(source);
+    public static void free(Object source) {
+        getPool(source.getClass()).free(source);
     }
 }

@@ -1,6 +1,7 @@
 package in.mcxiv.abyss.models.implementations;
 
 import in.mcxiv.abyss.data.representation.Array1DPolyData;
+import in.mcxiv.abyss.updators.SimpleAdditiveUpdater;
 import in.mcxiv.abyss.utilities.Cache;
 import in.mcxiv.abyss.utilities.Pools;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,6 @@ import java.util.List;
 
 import static in.mcxiv.abyss.core.ErrorFunction.dMeanSquaredError;
 import static in.mcxiv.abyss.core.ErrorFunction.meanSquaredError;
-import static in.mcxiv.abyss.data.representation.PolyData.sumAll;
 
 class FullyConnectedUnit2Test {
 
@@ -25,20 +25,29 @@ class FullyConnectedUnit2Test {
         model.initialize(x);
 
         var yp = Pools.ARRAY_POOL.issue(y.shape());
-        var cache = new Cache();
-        model.forward(x, yp, cache);
+        model.forward(x, yp);
+
         System.out.println(yp);
 
         var loss = Pools.ARRAY_POOL.issue();
         var dp = Pools.ARRAY_POOL.issue();
         var dx = Pools.ARRAY_POOL.issue();
 
+        var cache = new Cache();
+        SimpleAdditiveUpdater updater = new SimpleAdditiveUpdater(0.001f);
         for (int i = 0; i < 10000; i++) {
             model.forward(x, yp, cache);
-            float lossf = sumAll(meanSquaredError.calculate(y, yp, loss)) / y.shape(0);
+            float lossf = meanSquaredError.calculate(y, yp, loss).sumAll() / y.shape(0);
             System.out.println("Loss :" + lossf);
             dMeanSquaredError.calculate(y, yp, dp);
             model.backward(dp, dx, cache);
+            updater.apply(cache);
         }
+
+        Pools.ARRAY_POOL.free(dx);
+        Pools.ARRAY_POOL.free(dp);
+        Pools.ARRAY_POOL.free(loss);
+        Pools.ARRAY_POOL.free(yp);
+
     }
 }

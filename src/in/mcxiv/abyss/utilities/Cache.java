@@ -37,4 +37,16 @@ public class Cache extends ConcurrentHashMap<Integer, PolyData> {
         return parametersBuffer.stream();
     }
 
+    public static final Cache DEAD = new Cache() {
+        @Override
+        public PolyData put(Object owner, String name, PolyData value) {
+            Pools.free(value);
+            return null;
+        }
+
+        @Override
+        public void putParameter(String name, PolyData parameter, PolyData dParameter) {
+            Pools.free(dParameter);
+        }
+    };
 }

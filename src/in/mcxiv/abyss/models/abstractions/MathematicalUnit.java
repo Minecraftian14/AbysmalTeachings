@@ -24,6 +24,10 @@ public abstract class MathematicalUnit extends Unit {
         return inputDims;
     }
 
+    public PolyData forward(PolyData a_in, PolyData a_out) {
+        return forward(a_in, a_out, Cache.DEAD);
+    }
+
     public abstract PolyData forward(PolyData a_in, PolyData a_out, Cache cache);
 
     public abstract PolyData backward(PolyData da_out, PolyData da_in, Cache cache);

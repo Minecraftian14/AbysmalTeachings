@@ -34,9 +34,9 @@ public class FullyConnectedOld extends MathematicalUnit {
 
     @Override
     public PolyData forward(PolyData a_in, PolyData a_out, Cache cache) {
-        cross(a_in, weights, a_out);
-        add(a_out, bias, a_out);
-        unaryOperation(a_out, a_out, ActivationFunction::sigmoid);
+        a_in.cross( weights, a_out);
+        a_out.add( bias, a_out);
+        a_out.unaryOperation(a_out, a_out, ActivationFunction::sigmoid);
         cache.put(this, "a_in", a_in);
         cache.put(this, "a_out", a_out.clone());
         return a_out;
@@ -50,12 +50,12 @@ public class FullyConnectedOld extends MathematicalUnit {
         var dweights = Pools.ARRAY_POOL.issue(weights);
         var dbias = Pools.ARRAY_POOL.issue(bias);
 
-        unaryOperation(a_out, a_out, ActivationFunction::dsigmoid);
-        mul(a_out, da_out, a_out);
+        a_out.unaryOperation(a_out, a_out, ActivationFunction::dsigmoid);
+        a_out.mul( da_out, a_out);
 
-        cross(a_in.transpose(), a_out, dweights);
-        sumAlong(a_out, 0, dbias);
-        cross(a_out, weights.transpose(), da_in);
+        a_in.transpose().cross( a_out, dweights);
+        a_out.sumAlong(a_out, 0, dbias);
+        a_out.cross( weights.transpose(), da_in);
 
         cache.putParameter("weights", weights, dweights);
         cache.putParameter("bias", bias, dbias);

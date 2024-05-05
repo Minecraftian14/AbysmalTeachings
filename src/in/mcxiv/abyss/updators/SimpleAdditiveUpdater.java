@@ -3,12 +3,13 @@ package in.mcxiv.abyss.updators;
 import in.mcxiv.abyss.utilities.Cache;
 import in.mcxiv.abyss.utilities.Pools;
 
-import static in.mcxiv.abyss.data.representation.PolyData.add;
-import static in.mcxiv.abyss.data.representation.PolyData.unaryOperation;
-
 public class SimpleAdditiveUpdater implements Updater {
 
-    public float learning_rate = 0.01f;
+    public float learning_rate;
+
+    public SimpleAdditiveUpdater(float learning_rate) {
+        this.learning_rate = learning_rate;
+    }
 
     @Override
     public void apply(Cache cache) {
@@ -19,8 +20,8 @@ public class SimpleAdditiveUpdater implements Updater {
 
             var parameter = cache.remove(key);
             var dParameter = cache.remove(parameter.hashCode());
-            unaryOperation(dParameter, dParameter, f -> learning_rate * f);
-            add(parameter, dParameter, parameter);
+            dParameter.mul(learning_rate);
+            parameter.add(dParameter);
 
             Pools.ARRAY_POOL.free(dParameter);
         });

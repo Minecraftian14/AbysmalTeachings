@@ -23,7 +23,7 @@ public class FlattenUnit extends MathematicalUnit {
         int[] shape = a_in.shape();
         shape[0] = 1;
         a_out.reshape(a_in).fill(0);
-        PolyData.add(a_out, a_in, a_out);
+        a_out.add( a_in, a_out);
         cache.put(this, "a_in", a_in.clone());
         return a_out.reshape(a_in.shape(0), MoreMath.multiplyItems(shape));
     }
@@ -32,7 +32,7 @@ public class FlattenUnit extends MathematicalUnit {
     public PolyData backward(PolyData da_out, PolyData da_in, Cache cache) {
         PolyData a_in = cache.get(this, "a_in");
         da_in.reshape(da_out).fill(0);
-        PolyData.add(da_in, da_out, da_in);
+        da_in.add( da_out, da_in);
         return da_in.reshape(a_in.shape());
     }
 }
