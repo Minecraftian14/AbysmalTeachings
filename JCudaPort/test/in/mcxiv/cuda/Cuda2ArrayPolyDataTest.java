@@ -1,6 +1,5 @@
 package in.mcxiv.cuda;
 
-import in.mcxiv.abyss.data.representation.Array1DPolyData;
 import in.mcxiv.abyss.data.representation.PolyData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,10 +23,9 @@ class Cuda2ArrayPolyDataTest {
 
     @Test
     void timeItTest() {
-        PolyData m;
+        PolyData m = new Cuda2ArrayPolyData(1000, 100);
         long mark, time;
 
-        m = new Cuda2ArrayPolyData(1000, 1000);
         m.fill(3.5f);
         mark = System.nanoTime();
         m.fill(4.5f);
@@ -35,7 +33,9 @@ class Cuda2ArrayPolyDataTest {
         System.out.println(time);
         Assertions.assertEquals(4.5f, m.get(1, 1));
 
-        m = new Array1DPolyData(1000, 1000);
+        // Load class -> static overwrites backend
+        System.out.println(new CudaBackend());
+
         m.fill(3.5f);
         mark = System.nanoTime();
         m.fill(4.5f);

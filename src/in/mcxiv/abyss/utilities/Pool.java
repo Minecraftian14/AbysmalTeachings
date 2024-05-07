@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 public class Pool<T> {
 
-    public static boolean RECORD_POOL_DATA = true;
+    public static boolean RECORD_POOL_DATA = false;
 
     List<T> pool;
     Class<T> clazz;
