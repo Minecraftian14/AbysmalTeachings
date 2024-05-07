@@ -1,23 +1,28 @@
 package in.mcxiv.cuda;
 
 import in.mcxiv.abyss.data.representation.Array1DPolyData;
-import in.mcxiv.abyss.mathematics.MoreMath;
+import in.mcxiv.abyss.mathematics.MiscMath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class CudaArrayPolyDataTest {
+/*
 
     @Test
     void testCuda() {
+
+        // TODO THIS
+//        JCudnn.cudnnConvolutionBackwardFilter()
+        
         var m1a = new Array1DPolyData(10, 8);
         var m1c = new CudaArrayPolyData(10, 8);
         var m2 = new CudaArrayPolyData(8, 6);
         var m3a = new Array1DPolyData();
         var m3c = new Array1DPolyData();
 
-        m1a.fill(() -> MoreMath.randomInt(10));
+        m1a.fill(() -> MiscMath.randomInt(10));
         System.arraycopy(m1a.data, 0, m1c.data, 0, m1a.data.length);
-        m2.fill(() -> MoreMath.randomInt(10));
+        m2.fill(() -> MiscMath.randomInt(10));
 
         System.out.println("m1a = " + m1a);
         System.out.println("m1c = " + m1c);
@@ -38,13 +43,13 @@ class CudaArrayPolyDataTest {
         var m1c = new CudaArrayPolyData(m1a.shape());
         var m2 = new Array1DPolyData(m1a.shape(1), 50);
         var m3 = new Array1DPolyData();
-        m1a.fill(MoreMath::random10);
-        m1c.fill(MoreMath::random10);
-        m2.fill(MoreMath::random10);
+        m1a.fill(MiscMath::random10);
+        m1c.fill(MiscMath::random10);
+        m2.fill(MiscMath::random10);
 
         float time_a = 0;
         float time_c = 0;
-        int iterations = 5;
+        int iterations = 10;
         for (int i = 0; i < iterations; i++) {
 //            if (i % (iterations / 10) == 0)
             System.out.println(i + " iters compl");
@@ -63,4 +68,9 @@ class CudaArrayPolyDataTest {
         System.out.println("Array " + time_a + " ns");
         System.out.println("Cuda  " + time_c + " ns");
     }
+
+    @Test
+    void name() {
+    }
+*/
 }

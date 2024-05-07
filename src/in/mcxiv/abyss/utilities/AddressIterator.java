@@ -1,4 +1,4 @@
-package in.mcxiv.abyss.mathematics;
+package in.mcxiv.abyss.utilities;
 
 import java.util.Iterator;
 

@@ -4,11 +4,10 @@ import in.mcxiv.abyss.data.representation.LatePolyData;
 import in.mcxiv.abyss.data.representation.PolyData;
 import in.mcxiv.abyss.initializers.Additive2DParameterInitializer;
 import in.mcxiv.abyss.initializers.Multiplicative2DParameterInitializer;
-import in.mcxiv.abyss.mathematics.MoreMath;
+import in.mcxiv.abyss.mathematics.MiscMath;
 import in.mcxiv.abyss.models.abstractions.MathematicalUnit;
 import in.mcxiv.abyss.utilities.Cache;
 
-import static in.mcxiv.abyss.data.representation.PolyData.*;
 import static in.mcxiv.abyss.utilities.Pools.ARRAY_POOL;
 
 public class FullyConnectedUnit extends MathematicalUnit {
@@ -25,13 +24,13 @@ public class FullyConnectedUnit extends MathematicalUnit {
     @Override
     public int[] initialize(int[] inputDims) {
         super.initialize(inputDims);
-        return MoreMath.crossDimensions(inputDims, weights.shape());
+        return MiscMath.crossDimensions(inputDims, weights.shape());
     }
 
     @Override
     public PolyData forward(PolyData a_in, PolyData a_out, Cache cache) {
         a_in.cross(weights, a_out);
-        a_out.add( bias, a_out);
+        a_out.add(bias, a_out);
         cache.put(this, "a_in", ARRAY_POOL.clone(a_in));
         return a_out;
     }
@@ -43,9 +42,9 @@ public class FullyConnectedUnit extends MathematicalUnit {
         var dweights = ARRAY_POOL.issue(weights);
         var dbias = ARRAY_POOL.issue(bias);
 
-        a_in.transpose().cross( da_out, dweights);
-        da_out.sumAlong(da_out, 0, dbias);
-        da_out.cross( weights.transpose(), da_in);
+        a_in.transpose().cross(da_out, dweights);
+        da_out.sumAlong(0, dbias);
+        da_out.cross(weights.transpose(), da_in);
 
         cache.putParameter("weights", weights, dweights);
         cache.putParameter("bias", bias, dbias);

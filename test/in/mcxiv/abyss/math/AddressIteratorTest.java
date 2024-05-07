@@ -1,7 +1,7 @@
 package in.mcxiv.abyss.math;
 
-import in.mcxiv.abyss.mathematics.AddressIterator;
-import in.mcxiv.abyss.mathematics.MoreMath;
+import in.mcxiv.abyss.utilities.AddressIterator;
+import in.mcxiv.abyss.mathematics.MiscMath;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -71,6 +71,6 @@ class AddressIteratorTest {
     void print() {
         AddressIterator iterator = new AddressIterator(new int[]{2, 3, 5});
         while (iterator.hasNext())
-            System.out.println(Arrays.toString(iterator.next()) + "\t" + MoreMath.collapseAddress(new int[]{2, 3, 5}, iterator.next()));
+            System.out.println(Arrays.toString(iterator.next()) + "\t" + MiscMath.collapseAddress(new int[]{2, 3, 5}, iterator.next()));
     }
 }

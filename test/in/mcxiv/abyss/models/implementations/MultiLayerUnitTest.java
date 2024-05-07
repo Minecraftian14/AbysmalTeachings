@@ -4,9 +4,8 @@ import in.mcxiv.abyss.core.ActivationFunction;
 import in.mcxiv.abyss.data.presets.TestDataset;
 import in.mcxiv.abyss.data.representation.Array1DPolyData;
 import in.mcxiv.abyss.data.representation.PolyData;
-import in.mcxiv.abyss.data.representation.SlicedPolyData.Slice;
 import in.mcxiv.abyss.feeders.SingletonFeeder;
-import in.mcxiv.abyss.mathematics.MoreMath;
+import in.mcxiv.abyss.mathematics.MiscMath;
 import in.mcxiv.abyss.optimisers.GradientDescentOptimiser;
 import in.mcxiv.abyss.optimisers.events.EchoTrainingProgress;
 import in.mcxiv.abyss.optimisers.events.PlotLossAfterTraining;
@@ -26,7 +25,7 @@ import static in.mcxiv.abyss.core.ScoringFunction.accuracy;
 import static in.mcxiv.abyss.core.ScoringFunction.fuzzy_accuracy;
 import static in.mcxiv.abyss.data.representation.Array1DPolyData.n;
 
-class MultiLayerUnitTest {
+public class MultiLayerUnitTest {
 
     @BeforeEach
     void setUp() {
@@ -38,7 +37,7 @@ class MultiLayerUnitTest {
 
         var dataset = TestDataset.AND_DATA;
         PolyData x = dataset.features, y = dataset.targets;
-        x.unaryOperation(x, x, f -> 2 * f - 1);
+        x.unaryOperation(x, f -> 2 * f - 1);
         System.out.println("x = " + x);
         System.out.println("y = " + y);
         var feeder = new SingletonFeeder(dataset);
@@ -46,7 +45,7 @@ class MultiLayerUnitTest {
                 new FullyConnectedUnit(4),
                 new FullyConnectedUnit(y.shape(1))
         };
-        connections[0].weights.addPreprocessor(data -> data.fill(0.1f * MoreMath.random()));
+        connections[0].weights.addPreprocessor(data -> data.fill(0.1f * MiscMath.random()));
         connections[1].weights.addPreprocessor(data -> data.fill(0.1f));
         var model = new MultiLayerUnit(
                 connections[0],
@@ -73,7 +72,7 @@ class MultiLayerUnitTest {
     }
 
     @Test
-    void testWithMNIST() {
+    public void testWithMNIST() {
         int limlen = Math.min(100 /* Reduce or increase this value to adjust the size of data loaded from training                                                                 */, 10000);
         PolyData x = new Array1DPolyData(limlen, 28, 28, 1);
         var y = new Array1DPolyData(limlen, 10);
@@ -113,12 +112,12 @@ class MultiLayerUnitTest {
         var feeder = new SingletonFeeder(x, y);
         var model = new MultiLayerUnit(
                 new ImageBatchConvolutionalUnit(5, 3) {{
-                    filter.addPreprocessor(pd -> pd.fill(MoreMath::randomNormal));
+                    filter.addPreprocessor(pd -> pd.fill(MiscMath::randomNormal));
                 }},
                 new ActivationUnit(ActivationFunction.SIGMOID),
                 new FlattenUnit(),
                 new FullyConnectedUnit(y.shape(1)) {{
-                    weights.addPreprocessor(pd -> pd.fill(MoreMath::randomNormal));
+                    weights.addPreprocessor(pd -> pd.fill(MiscMath::randomNormal));
                 }},
                 new ActivationUnit(ActivationFunction.SIGMOID)
         );
@@ -129,7 +128,7 @@ class MultiLayerUnitTest {
         System.out.println("F Accuracy : " + fuzzy_accuracy.score(y, model.forward(x, n(), new Cache())));
 
         var optimiser = new GradientDescentOptimiser(model, feeder, null, new SimpleAdditiveUpdater(0.01f));
-        optimiser.epoch=10;
+        optimiser.epoch = 10;
         optimiser.addListener(new PlotLossAfterTraining());
         optimiser.addListener(new EchoTrainingProgress());
         optimiser.fit();
@@ -143,18 +142,18 @@ class MultiLayerUnitTest {
     void convTest() {
         PolyData x = new Array1DPolyData(10, 5, 5, 3);
         PolyData y = new Array1DPolyData(10, 3);
-        x.fill(MoreMath::random);
-        y.fill(MoreMath::randomBit);
+        x.fill(MiscMath::random);
+        y.fill(MiscMath::randomBit);
         x.unaryOperation(f -> 2 * f - 1);
         var feeder = new SingletonFeeder(x, y);
         var model = new MultiLayerUnit(
                 new ImageBatchConvolutionalUnit(10, 3) {{
-                    filter.addPreprocessor(pd -> pd.fill(MoreMath::randomNormal));
+                    filter.addPreprocessor(pd -> pd.fill(MiscMath::randomNormal));
                 }},
                 new ActivationUnit(ActivationFunction.SIGMOID),
                 new FlattenUnit(),
                 new FullyConnectedUnit(y.shape(1)) {{
-                    weights.addPreprocessor(pd -> pd.fill(MoreMath::randomNormal));
+                    weights.addPreprocessor(pd -> pd.fill(MiscMath::randomNormal));
                 }},
                 new ActivationUnit(ActivationFunction.SIGMOID)
         );

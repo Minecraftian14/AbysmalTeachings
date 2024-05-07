@@ -1,6 +1,6 @@
 package in.mcxiv.abyss.data.representation;
 
-import in.mcxiv.abyss.mathematics.MoreMath;
+import in.mcxiv.abyss.mathematics.MiscMath;
 
 public class TransposeImagePolyData extends PolyDataPolyData {
     public TransposeImagePolyData(PolyData polyData) {
@@ -15,18 +15,18 @@ public class TransposeImagePolyData extends PolyDataPolyData {
     @Override
     public PolyData reshape(int[] shape) {
         // TODO: Verify
-        super.reshape(MoreMath.reversed(shape));
+        super.reshape(MiscMath.reversed(shape));
         return this;
     }
 
     @Override
     public float get(int... address) {
-        return super.get(MoreMath.reversed(address));
+        return super.get(MiscMath.reversed(address));
     }
 
     @Override
     public void set(float value, int... address) {
-        super.set(value, MoreMath.reversed(address));
+        super.set(value, MiscMath.reversed(address));
     }
 
     @Override

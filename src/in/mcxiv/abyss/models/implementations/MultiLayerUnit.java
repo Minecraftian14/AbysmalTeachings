@@ -1,7 +1,7 @@
 package in.mcxiv.abyss.models.implementations;
 
 import in.mcxiv.abyss.data.representation.PolyData;
-import in.mcxiv.abyss.mathematics.AddressIterator;
+import in.mcxiv.abyss.utilities.AddressIterator;
 import in.mcxiv.abyss.models.abstractions.MathematicalUnit;
 import in.mcxiv.abyss.utilities.Cache;
 import in.mcxiv.abyss.utilities.Pools;

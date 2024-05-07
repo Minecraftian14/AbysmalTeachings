@@ -6,22 +6,24 @@ package in.mcxiv.cuda;
  * Copyright 2008-2016 Marco Hutter - http://www.jcuda.org
  */
 
-import static jcuda.driver.CUdevice_attribute.CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR;
-import static jcuda.driver.CUdevice_attribute.CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR;
-import static jcuda.driver.JCudaDriver.cuCtxGetDevice;
-import static jcuda.driver.JCudaDriver.cuDeviceGetAttribute;
+import jcuda.CudaException;
+import jcuda.driver.CUdevice;
+import jcuda.driver.CUresult;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import jcuda.CudaException;
-import jcuda.driver.CUdevice;
-import jcuda.driver.CUresult;
+import static jcuda.driver.CUdevice_attribute.CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR;
+import static jcuda.driver.CUdevice_attribute.CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR;
+import static jcuda.driver.JCudaDriver.cuCtxGetDevice;
+import static jcuda.driver.JCudaDriver.cuDeviceGetAttribute;
 
 /**
  * Utility methods that are used in the JCuda samples.<br>
@@ -30,8 +32,7 @@ import jcuda.driver.CUresult;
  * the use in the samples. Parts of its functionality could be replaced
  * with the runtime compilation features that have been added in CUDA 7.5.
  */
-public class JCudaSamplesUtils
-{
+public class JCudaSamplesUtils {
     /**
      * The logger used in this class
      */
@@ -45,11 +46,31 @@ public class JCudaSamplesUtils
      * @param cuFileName The CUDA file name
      * @return The PTX file name
      * @throws CudaException If an error occurs - i.e. when the input file
-     * does not exist, or the NVCC call caused an error.
+     *                       does not exist, or the NVCC call caused an error.
      */
-    public static String preparePtxFile(String cuFileName)
-    {
-        return invokeNvcc(cuFileName, "ptx", true);
+    public static String preparePtxFile(String cuFileName) {
+//        return invokeNvcc(cuFileName, "ptx", true);
+        return invokeNvcc(cuFileName, "ptx", true,
+                "-ccbin", "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx64\\x64\"");
+    }
+
+    public static String preparePtxFileFromCode(String code) {
+//        String file = "JCudaPort/res/cu_file_" + Math.abs(code.hashCode());
+        String file = "res/cu_file_" + Math.abs(code.hashCode());
+        {
+            File temp = new File(file + ".ptx");
+            if (temp.exists()) return temp.getAbsolutePath();
+        }
+        try {
+            File temp = new File(file + ".cu");
+            System.out.println("temp.getAbsolutePath() = " + temp.getAbsolutePath());
+            temp.createNewFile();
+            temp.deleteOnExit();
+            Files.writeString(Path.of(temp.getAbsolutePath()), code);
+            return preparePtxFile(temp.getAbsolutePath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -65,15 +86,14 @@ public class JCudaSamplesUtils
      * @param cuFileName The CUDA file name
      * @return The PTX file name
      * @throws CudaException If an error occurs - i.e. when the input file
-     * does not exist, or the NVCC call caused an error.
+     *                       does not exist, or the NVCC call caused an error.
      * @throws CudaException If there is no current context
      */
-    public static String prepareDefaultCubinFile(String cuFileName)
-    {
+    public static String prepareDefaultCubinFile(String cuFileName) {
         int computeCapability = computeComputeCapability();
-        String nvccArguments[] = new String[] {
+        String nvccArguments[] = new String[]{
                 "-dlink",
-                "-arch=sm_"+computeCapability
+                "-arch=sm_" + computeCapability
         };
         return invokeNvcc(cuFileName, "cubin", true, nvccArguments);
     }
@@ -91,23 +111,21 @@ public class JCudaSamplesUtils
      * <br>
      * The name of the resulting output file is returned.
      *
-     * @param cuFileName The name of the .CU file
+     * @param cuFileName     The name of the .CU file
      * @param targetFileType The target file type. Must be <code>"cubin"</code>
-     * or <code>"ptx"</code> (case-insensitively)
-     * @param forceRebuild Whether the PTX file should be created even if
-     * it already exists
+     *                       or <code>"ptx"</code> (case-insensitively)
+     * @param forceRebuild   Whether the PTX file should be created even if
+     *                       it already exists
      * @return The name of the PTX file
-     * @throws CudaException If an error occurs - i.e. when the input file
-     * does not exist, or the NVCC call caused an error.
+     * @throws CudaException            If an error occurs - i.e. when the input file
+     *                                  does not exist, or the NVCC call caused an error.
      * @throws IllegalArgumentException If the target file type is not valid
      */
     private static String invokeNvcc(
             String cuFileName, String targetFileType,
-            boolean forceRebuild, String ... nvccArguments)
-    {
+            boolean forceRebuild, String... nvccArguments) {
         if (!"cubin".equalsIgnoreCase(targetFileType) &&
-                !"ptx".equalsIgnoreCase(targetFileType))
-        {
+                !"ptx".equalsIgnoreCase(targetFileType)) {
             throw new IllegalArgumentException(
                     "Target file type must be \"ptx\" or \"cubin\", but is " +
                             targetFileType);
@@ -115,21 +133,18 @@ public class JCudaSamplesUtils
         logger.info("Creating " + targetFileType + " file for " + cuFileName);
 
         int dotIndex = cuFileName.lastIndexOf('.');
-        if (dotIndex == -1)
-        {
+        if (dotIndex == -1) {
             dotIndex = cuFileName.length();
         }
         String otuputFileName = cuFileName.substring(0, dotIndex) +
                 "." + targetFileType.toLowerCase();
         File ptxFile = new File(otuputFileName);
-        if (ptxFile.exists() && !forceRebuild)
-        {
+        if (ptxFile.exists() && !forceRebuild) {
             return otuputFileName;
         }
 
         File cuFile = new File(cuFileName);
-        if (!cuFile.exists())
-        {
+        if (!cuFile.exists()) {
             throw new CudaException("Input file not found: " + cuFileName +
                     " (" + cuFile.getAbsolutePath() + ")");
         }
@@ -137,15 +152,14 @@ public class JCudaSamplesUtils
         String command = "nvcc ";
         command += modelString + " ";
         command += "-" + targetFileType + " ";
-        for (String a : nvccArguments)
-        {
+        for (String a : nvccArguments) {
             command += a + " ";
         }
         command += cuFileName + " -o " + otuputFileName;
 
         logger.info("Executing\n" + command);
-        try
-        {
+        System.out.println("Executing\n" + command);
+        try {
             Process process = Runtime.getRuntime().exec(command);
 
             String errorMessage =
@@ -153,27 +167,21 @@ public class JCudaSamplesUtils
             String outputMessage =
                     new String(toByteArray(process.getInputStream()));
             int exitValue = 0;
-            try
-            {
+            try {
                 exitValue = process.waitFor();
-            }
-            catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new CudaException(
                         "Interrupted while waiting for nvcc output", e);
             }
-            if (exitValue != 0)
-            {
+            if (exitValue != 0) {
                 logger.severe("nvcc process exitValue " + exitValue);
                 logger.severe("errorMessage:\n" + errorMessage);
                 logger.severe("outputMessage:\n" + outputMessage);
                 throw new CudaException("Could not create " + targetFileType +
                         " file: " + errorMessage);
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CudaException("Could not create " + targetFileType +
                     " file", e);
         }
@@ -190,15 +198,12 @@ public class JCudaSamplesUtils
      * @throws IOException If an I/O error occurs
      */
     private static byte[] toByteArray(InputStream inputStream)
-            throws IOException
-    {
+            throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte buffer[] = new byte[8192];
-        while (true)
-        {
+        while (true) {
             int read = inputStream.read(buffer);
-            if (read == -1)
-            {
+            if (read == -1) {
                 break;
             }
             baos.write(buffer, 0, read);
@@ -215,12 +220,10 @@ public class JCudaSamplesUtils
      * @return The compute capability of the current device
      * @throws CudaException If there is no current context
      */
-    private static int computeComputeCapability()
-    {
+    private static int computeComputeCapability() {
         CUdevice device = new CUdevice();
         int status = cuCtxGetDevice(device);
-        if (status != CUresult.CUDA_SUCCESS)
-        {
+        if (status != CUresult.CUDA_SUCCESS) {
             throw new CudaException(CUresult.stringFor(status));
         }
         return computeComputeCapability(device);
@@ -236,10 +239,9 @@ public class JCudaSamplesUtils
      * @param device The device
      * @return The compute capability
      */
-    private static int computeComputeCapability(CUdevice device)
-    {
-        int majorArray[] = { 0 };
-        int minorArray[] = { 0 };
+    private static int computeComputeCapability(CUdevice device) {
+        int majorArray[] = {0};
+        int minorArray[] = {0};
         cuDeviceGetAttribute(majorArray,
                 CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR, device);
         cuDeviceGetAttribute(minorArray,
@@ -257,12 +259,10 @@ public class JCudaSamplesUtils
      * @param n The size of the array
      * @return The array of random values
      */
-    public static float[] createRandomFloatData(int n)
-    {
+    public static float[] createRandomFloatData(int n) {
         Random random = new Random(0);
         float a[] = new float[n];
-        for (int i = 0; i < n; i++)
-        {
+        for (int i = 0; i < n; i++) {
             a[i] = random.nextFloat();
         }
         return a;
@@ -272,24 +272,20 @@ public class JCudaSamplesUtils
      * Compares the given result against a reference, and returns whether the
      * error norm is below a small epsilon threshold
      *
-     * @param result The result
+     * @param result    The result
      * @param reference The reference
      * @return Whether the arrays are equal based on the error norm
-     * @throws NullPointerException If any argument is <code>null</code>
+     * @throws NullPointerException     If any argument is <code>null</code>
      * @throws IllegalArgumentException If the arrays have different lengths
      */
-    public static boolean equalByNorm(float result[], float reference[])
-    {
-        if (result == null)
-        {
+    public static boolean equalByNorm(float result[], float reference[]) {
+        if (result == null) {
             throw new NullPointerException("The result is null");
         }
-        if (reference == null)
-        {
+        if (reference == null) {
             throw new NullPointerException("The reference is null");
         }
-        if (result.length != reference.length)
-        {
+        if (result.length != reference.length) {
             throw new IllegalArgumentException(
                     "The result and reference array have different lengths: " +
                             result.length + " and " + reference.length);
@@ -297,16 +293,14 @@ public class JCudaSamplesUtils
         final float epsilon = 1e-6f;
         float errorNorm = 0;
         float refNorm = 0;
-        for (int i = 0; i < result.length; ++i)
-        {
+        for (int i = 0; i < result.length; ++i) {
             float diff = reference[i] - result[i];
             errorNorm += diff * diff;
             refNorm += reference[i] * result[i];
         }
         errorNorm = (float) Math.sqrt(errorNorm);
         refNorm = (float) Math.sqrt(refNorm);
-        if (Math.abs(refNorm) < epsilon)
-        {
+        if (Math.abs(refNorm) < epsilon) {
             return false;
         }
         return (errorNorm / refNorm < epsilon);
@@ -317,24 +311,20 @@ public class JCudaSamplesUtils
      * Creates a string representation of the given array as a matrix with
      * with given number of columns.
      *
-     * @param a The array
+     * @param a       The array
      * @param columns The number of columns
      * @return The string representation
      */
-    public static String toString2D(float[] a, int columns)
-    {
+    public static String toString2D(float[] a, int columns) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < a.length; i++)
-        {
-            if ((i > 0) && (i % columns == 0))
-            {
+        for (int i = 0; i < a.length; i++) {
+            if ((i > 0) && (i % columns == 0)) {
                 sb.append("\n");
             }
             sb.append(String.format(Locale.ENGLISH, "%7.4f ", a[i]));
         }
         return sb.toString();
     }
-
 
 
 }

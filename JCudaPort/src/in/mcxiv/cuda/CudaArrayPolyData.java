@@ -5,6 +5,7 @@ import in.mcxiv.abyss.data.representation.PolyData;
 import in.mcxiv.abyss.interfaces.FloatOperation;
 import jcuda.Pointer;
 import jcuda.Sizeof;
+import jcuda.jcublas.JCublas;
 import jcuda.jcublas.cublasHandle;
 
 import static jcuda.jcublas.JCublas2.*;
@@ -12,6 +13,11 @@ import static jcuda.jcublas.cublasOperation.CUBLAS_OP_N;
 import static jcuda.runtime.JCuda.cudaFree;
 import static jcuda.runtime.JCuda.cudaMalloc;
 
+public class CudaArrayPolyData {
+
+}
+
+/*
 public class CudaArrayPolyData extends Array1DPolyData {
 
     public CudaArrayPolyData(int... shape) {
@@ -26,6 +32,7 @@ public class CudaArrayPolyData extends Array1DPolyData {
             return super.vectorOperation(first, second, result, cast, reduce, identity);
         if (first.shape(1) != second.shape(0))
             throw new IllegalStateException();
+        // TODO: Also add if cast and reduce are our cake
 
         int m = first.shape(0);
         int n = first.shape(1);
@@ -60,7 +67,6 @@ public class CudaArrayPolyData extends Array1DPolyData {
         // Execute sgemm
         Pointer pAlpha = Pointer.to(new float[]{1f});
         Pointer pBeta = Pointer.to(new float[]{0f});
-//        cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, c, m, n, pAlpha, d_A, m, d_B, n, pBeta, d_C, m);
         cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, c, m, n, pAlpha, d_B, c, d_A, n, pBeta, d_C, c);
 
         // Copy the result from the device to the host
@@ -74,4 +80,4 @@ public class CudaArrayPolyData extends Array1DPolyData {
 
         return result;
     }
-}
+}*/

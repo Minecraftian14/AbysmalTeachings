@@ -67,9 +67,29 @@ class PolyDataTest {
         AtomicInteger integer = new AtomicInteger();
         m1.fill(integer::getAndIncrement);
         PolyData m2 = new Array1DPolyData(1);
-        m1.sumAlong(m1, 0, m2);
+        m1.sumAlong(0, m2);
         assertArrayEquals(new float[]{36.0f, 40.0f, 44.0f, 48.0f, 52.0f, 56.0f}, m2.export());
-        m1.sumAlong(m1, 1, m2);
+        System.out.println(m2);
+//        assertArrayEquals(new float[]{36.0f, 40.0f, 44.0f, 48.0f, 52.0f, 56.0f}, m2.shape());
+        m1.sumAlong(1, m2);
+        System.out.println(m2);
+        assertArrayEquals(new float[]{6.0f, 9.0f, 24.0f, 27.0f, 42.0f, 45.0f, 60.0f, 63.0f}, m2.export());
+    }
+
+    @Test
+    void testReduceSumAlong2() {
+        PolyData m1 = new Array1DPolyData(4, 3, 2);
+        AtomicInteger integer = new AtomicInteger();
+        m1.fill(integer::getAndIncrement);
+        PolyData m2 = new Array1DPolyData(1);
+//        m1.sumAlong(m1, 0, m2);
+        System.out.println(m1);
+        m2 = m1.reduceOperation(0, false, Float::sum);
+        System.out.println(m2);
+        assertArrayEquals(new float[]{36.0f, 40.0f, 44.0f, 48.0f, 52.0f, 56.0f}, m2.export());
+//        assertArrayEquals(new float[]{36.0f, 40.0f, 44.0f, 48.0f, 52.0f, 56.0f}, m2.shape());
+        m1.sumAlong(1, m2);
+        System.out.println(m2);
         assertArrayEquals(new float[]{6.0f, 9.0f, 24.0f, 27.0f, 42.0f, 45.0f, 60.0f, 63.0f}, m2.export());
     }
 
@@ -83,8 +103,8 @@ class PolyDataTest {
                 4, 5, 6, 3,
                 4, 6, 5, 7
         ).reshape(6, 4);
-        assertArrayEquals(new float[]{6f, 7f, 6f, 7f}, m1.reduceOperation(m1, n(), 0, Math::max).export());
-        assertArrayEquals(new float[]{5f, 6f, 7f, 7f, 6f, 7f}, m1.reduceOperation(m1, n(), 1, Math::max).export());
+        assertArrayEquals(new float[]{6f, 7f, 6f, 7f}, m1.reduceOperation(n(), 0, true, Math::max).export());
+        assertArrayEquals(new float[]{5f, 6f, 7f, 7f, 6f, 7f}, m1.reduceOperation(n(), 1, true, Math::max).export());
     }
 
     @Test
@@ -97,8 +117,8 @@ class PolyDataTest {
                 4, 5, 6, 3,
                 4, 6, 5, 7
         ).reshape(6, 4);
-        assertArrayEquals(new float[]{2f, 2f, 2f, 3f}, m1.indexOperation(m1, n(), 0, Math::max).export());
-        assertArrayEquals(new float[]{3f, 1f, 1f, 3f, 2f, 3f}, m1.indexOperation(m1, n(), 1, Math::max).export());
+        assertArrayEquals(new float[]{2f, 2f, 2f, 3f}, m1.indexOperation(n(), 0, Math::max).export());
+        assertArrayEquals(new float[]{3f, 1f, 1f, 3f, 2f, 3f}, m1.indexOperation(n(), 1, Math::max).export());
     }
 
     @Test

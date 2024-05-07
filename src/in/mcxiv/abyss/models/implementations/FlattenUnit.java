@@ -1,7 +1,7 @@
 package in.mcxiv.abyss.models.implementations;
 
 import in.mcxiv.abyss.data.representation.PolyData;
-import in.mcxiv.abyss.mathematics.MoreMath;
+import in.mcxiv.abyss.mathematics.MiscMath;
 import in.mcxiv.abyss.models.abstractions.MathematicalUnit;
 import in.mcxiv.abyss.utilities.Cache;
 
@@ -14,7 +14,7 @@ public class FlattenUnit extends MathematicalUnit {
         int[] result = new int[2];
         result[0] = inputDims[0];
         inputDims[0] = 1;
-        result[1] = MoreMath.multiplyItems(inputDims);
+        result[1] = MiscMath.multiplyItems(inputDims);
         return result;
     }
 
@@ -25,7 +25,7 @@ public class FlattenUnit extends MathematicalUnit {
         a_out.reshape(a_in).fill(0);
         a_out.add( a_in, a_out);
         cache.put(this, "a_in", a_in.clone());
-        return a_out.reshape(a_in.shape(0), MoreMath.multiplyItems(shape));
+        return a_out.reshape(a_in.shape(0), MiscMath.multiplyItems(shape));
     }
 
     @Override

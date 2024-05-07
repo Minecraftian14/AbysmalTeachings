@@ -1,14 +1,17 @@
 package in.mcxiv.abyss.mathematics;
 
 import in.mcxiv.abyss.interfaces.IntToIntFunction;
+import in.mcxiv.abyss.mathematics.backend.Backend;
 
 import java.util.Arrays;
 
-public final class MoreMath {
+public final class MiscMath {
 
     public static final float EQUALITY_THRESHOLD = 1e-6f;
 
-    private MoreMath() {
+    public static Backend BACKEND = Backend.GENERIC_SUPPORT_BACKEND;
+
+    private MiscMath() {
     }
 
     public static float sum(float x, float y) {

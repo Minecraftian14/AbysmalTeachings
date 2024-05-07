@@ -3,12 +3,11 @@ package in.mcxiv.abyss.models.implementations;
 import in.mcxiv.abyss.data.representation.Array1DPolyData;
 import in.mcxiv.abyss.data.representation.PolyData;
 import in.mcxiv.abyss.feeders.SingletonFeeder;
-import in.mcxiv.abyss.mathematics.MoreMath;
+import in.mcxiv.abyss.mathematics.MiscMath;
 import in.mcxiv.abyss.optimisers.GradientDescentOptimiser;
 import in.mcxiv.abyss.optimisers.events.PlotLossAfterTraining;
 import in.mcxiv.abyss.updators.SimpleAdditiveUpdater;
 import in.mcxiv.abyss.utilities.Cache;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static in.mcxiv.abyss.core.ErrorFunction.meanSquaredError;
@@ -25,16 +24,16 @@ class VeryLimitedAndPracticallyUselessConvolutionalUnitTest {
 
         PolyData x = new Array1DPolyData(5, 5);
         PolyData y = new Array1DPolyData(3, 3);
-        x.fill(MoreMath::random);
-        y.fill(MoreMath::random);
+        x.fill(MiscMath::random);
+        y.fill(MiscMath::random);
 
-        x.unaryOperation(x, x, f -> 2 * f - 1);
+        x.unaryOperation( f -> 2 * f - 1);
         System.out.println("x = " + x);
         System.out.println("y = " + y);
 //        var feeder = new SingletonFeeder(dataset);
         var feeder = new SingletonFeeder(x, y);
         var model = new VeryLimitedAndPracticallyUselessConvolutionalUnit(97);
-        model.filter.fill(0.1f * MoreMath.random());
+        model.filter.fill(0.1f * MiscMath.random());
         model.initialize(x);
 
         System.out.println("Loss       : " + meanSquaredError.netCalculate(y, model.forward(x, n(), new Cache()), n()));

@@ -1,6 +1,6 @@
 package in.mcxiv.abyss.data.representation;
 
-import in.mcxiv.abyss.mathematics.MoreMath;
+import in.mcxiv.abyss.mathematics.MiscMath;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -11,7 +11,7 @@ class SlicedPolyDataTest {
     @Test
     void test() {
         var data = new Array1DPolyData(10, 4, 5, 6, 4);
-        data.fill(MoreMath::random);
+        data.fill(MiscMath::random);
         System.out.println(data);
 
         var slice = new SlicedPolyData(data, 1, SlicedPolyData.ALL, 1);

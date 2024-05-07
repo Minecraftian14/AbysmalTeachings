@@ -3,8 +3,7 @@ package in.mcxiv.abyss.interfaces;
 import java.util.function.BiFunction;
 
 @FunctionalInterface
-public
-interface FloatOperation extends BiFunction<Float, Float, Float> {
+public interface FloatOperation extends BiFunction<Float, Float, Float> {
     float operate(float a, float b);
 
     @Override

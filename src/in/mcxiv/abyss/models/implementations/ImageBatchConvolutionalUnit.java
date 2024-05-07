@@ -8,7 +8,6 @@ import in.mcxiv.abyss.initializers.Convolutive2DFCParameterInitializer;
 import in.mcxiv.abyss.models.abstractions.MathematicalUnit;
 import in.mcxiv.abyss.utilities.Cache;
 
-import static in.mcxiv.abyss.data.representation.PolyData.*;
 import static in.mcxiv.abyss.utilities.Pools.ARRAY_POOL;
 
 public class ImageBatchConvolutionalUnit extends MathematicalUnit {
@@ -39,7 +38,7 @@ public class ImageBatchConvolutionalUnit extends MathematicalUnit {
 
     @Override
     public PolyData forward(PolyData a_in, PolyData a_out, Cache cache) {
-        a_in.imageConvolveForward(a_in, filter, a_out);
+        a_in.imageConvolveForward(filter, a_out);
         cache.put(this, "a_in", ARRAY_POOL.clone(a_in));
         return a_out;
     }
@@ -50,13 +49,13 @@ public class ImageBatchConvolutionalUnit extends MathematicalUnit {
 
         var dweights /*[f,f,c,k]*/ = ARRAY_POOL.issue(filter);
 
-        a_in.imageConvolveBackward(a_in, da_out, dweights);
+        a_in.imageConvolveBackward(da_out, dweights);
 //        convolveOperation(a_in, da_out, dweights);
 
         var pad_da_out /*[m,rw+2(f-1),rh+2(f-1),k]*/ = new PadImagePolyData(da_out, 0, 0, filter_size - 1, filter_size - 1, 0);
 //        var flip_filter /*[f,f,k,c]*/ = new FlipImagePolyData(filter);
 //        convolveOperation(pad_da_out, /*[f,f,k,c]*/ filter_reverse, da_in);
-        pad_da_out.imageConvolveForward(pad_da_out, /*[f,f,k,c]*/ filter_reverse, da_in);
+        pad_da_out.imageConvolveForward( /*[f,f,k,c]*/ filter_reverse, da_in);
 
         cache.putParameter("weights", filter, dweights);
 

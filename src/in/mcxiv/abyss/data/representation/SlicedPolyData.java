@@ -158,14 +158,18 @@ public class SlicedPolyData extends PolyDataPolyData {
             return this;
         }
 
-        public SlicedPolyData slice(PolyData data) {
+        public SlicedPolyData slice(PolyData data, SlicedPolyData slice) {
             int[] fm = new int[fromMask.size()];
             int[] tm = new int[toMask.size()];
             for (int i = 0, s = fromMask.size(); i < s; i++) {
                 fm[i] = fromMask.get(i);
                 tm[i] = toMask.get(i);
             }
-            return new SlicedPolyData(data, fm, tm);
+            return slice.initialize(data, fm, tm);
+        }
+
+        public SlicedPolyData slice(PolyData data) {
+            return slice(data, new SlicedPolyData());
         }
     }
 }

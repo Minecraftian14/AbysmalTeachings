@@ -1,6 +1,6 @@
 package in.mcxiv.abyss.data.representation;
 
-import in.mcxiv.abyss.mathematics.MoreMath;
+import in.mcxiv.abyss.mathematics.MiscMath;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +16,7 @@ public class Array1DPolyData implements PolyData {
     }
 
     public Array1DPolyData(int... shape) {
-        this(new float[MoreMath.multiplyItems(shape)], shape);
+        this(new float[MiscMath.multiplyItems(shape)], shape);
     }
 
     public Array1DPolyData(float[] data, int... shape) {
@@ -63,7 +63,7 @@ public class Array1DPolyData implements PolyData {
 
     @Override
     public PolyData reshape(int... shape) {
-        int newDataLength = MoreMath.multiplyItems(shape);
+        int newDataLength = MiscMath.multiplyItems(shape);
         if (newDataLength > data.length)
             data = Arrays.copyOf(data, newDataLength);
         this.shape = shape;
@@ -72,12 +72,12 @@ public class Array1DPolyData implements PolyData {
 
     @Override
     public float get(int... address) {
-        return data[MoreMath.collapseAddress(shape, address)];
+        return data[MiscMath.collapseAddress(shape, address)];
     }
 
     @Override
     public void set(float value, int... address) {
-        data[MoreMath.collapseAddress(shape, address)] = value;
+        data[MiscMath.collapseAddress(shape, address)] = value;
     }
 
     @Override

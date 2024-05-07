@@ -3,7 +3,7 @@ package in.mcxiv.abyss.models.implementations;
 import in.mcxiv.abyss.data.representation.Array1DPolyData;
 import in.mcxiv.abyss.data.representation.PolyData;
 import in.mcxiv.abyss.feeders.SingletonFeeder;
-import in.mcxiv.abyss.mathematics.MoreMath;
+import in.mcxiv.abyss.mathematics.MiscMath;
 import in.mcxiv.abyss.optimisers.GradientDescentOptimiser;
 import in.mcxiv.abyss.optimisers.events.PlotLossAfterTraining;
 import in.mcxiv.abyss.updators.SimpleAdditiveUpdater;
@@ -21,9 +21,9 @@ class ImageBatchConvolutionalUnitTest {
     void basicTest() {
         PolyData x = new Array1DPolyData(10, 5, 5, 3);
         PolyData y = new Array1DPolyData(10, 3, 3, 5);
-        x.fill(MoreMath::random);
-        y.fill(MoreMath::random);
-        x.unaryOperation(x, x, f -> 2 * f - 1);
+        x.fill(MiscMath::random);
+        y.fill(MiscMath::random);
+        x.unaryOperation( x, f -> 2 * f - 1);
         var feeder = new SingletonFeeder(x, y);
         var model = new ImageBatchConvolutionalUnit(5, 3);
         model.filter.addPreprocessor(pd -> pd.fill(0.01f));

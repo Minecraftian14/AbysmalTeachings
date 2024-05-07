@@ -8,7 +8,7 @@ public interface ActivationFunction {
     float activate(float x);
 
     default PolyData activate(PolyData x, PolyData y) {
-        return x.unaryOperation(x, y, this::activate);
+        return x.unaryOperation( y, this::activate);
     }
 
     // TODO derivative of activate, is it right to call it deactivate?
@@ -16,7 +16,7 @@ public interface ActivationFunction {
     float deactivate(float x);
 
     default PolyData deactivate(PolyData x, PolyData dx) {
-        return x.unaryOperation(x, dx, this::deactivate);
+        return x.unaryOperation( dx, this::deactivate);
     }
 
     ActivationFunction SIGMOID = new ActivationFunction() {
